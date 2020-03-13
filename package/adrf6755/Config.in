@@ -1,0 +1,5 @@
+config BR2_PACKAGE_ADRF6755
+	bool "adrf6755"
+	depends on BR2_LINUX_KERNEL
+	help
+	  ADRF6755 tuner kernel module
