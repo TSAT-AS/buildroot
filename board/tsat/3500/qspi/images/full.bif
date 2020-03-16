@@ -1,0 +1,11 @@
+the_ROM_image:
+{
+	[bootloader]fsbl.elf
+	fpga.bit
+	u-boot
+	[offset=0x500000]boot.scr
+	[offset=0x540000]uboot-env.bin
+	[offset=0x5C0000]uImage
+	[offset=0xA00000]zynq-mars-zx3.dtb
+	[offset=0xA40000]rootfs.squashfs
+}

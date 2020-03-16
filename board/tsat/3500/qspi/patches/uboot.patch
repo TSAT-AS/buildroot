@@ -1,0 +1,353 @@
+diff --git a/arch/arm/dts/zynq-mars-zx3.dts b/arch/arm/dts/zynq-mars-zx3.dts
+index be183f46..6849bdce 100644
+--- a/arch/arm/dts/zynq-mars-zx3.dts
++++ b/arch/arm/dts/zynq-mars-zx3.dts
+@@ -14,13 +14,22 @@
+ 	compatible = "xlnx,zynq-7000";
+ 
+ 	aliases {
++		eeprom0 = &eeprom;
+ 		ethernet0 = &gem0;
++		ethernet1 = &gem1;
+ 		mmc0 = &sdhci0;
+ 		serial0 = &uart0;
+ 		spi0 = &qspi;
+ 		usb0 = &usb0;
+ 		gpio0 = &gpio0;
++		gpio1 = &tca6416_led;
++		gpio2 = &tca6416_gpio;
+ 		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++	};
++
++	chosen {
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+@@ -68,3 +77,52 @@
+ 		reg = <0x64>;
+ 	};
+ };
++
++&i2c1 {
++	status = "okay";
++
++	tca6416_led: gpio@20 {
++		compatible = "ti,tca6416";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	tca6416_gpio: gpio@21 {
++		compatible = "ti,tca6416";
++		reg = <0x21>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	ina226_rx: ina226@40 {
++		compatible = "ti,ina226";
++		ti,rail-name = "RX";
++		reg = <0x40>;
++		shunt-resistor = <40000>;
++	};
++
++	ina226_tx: ina226@41 {
++		compatible = "ti,ina226";
++		ti,rail-name = "TX";
++		reg = <0x41>;
++		shunt-resistor = <10000>;
++	};
++/*
++	ADS1000@48 {
++
++	}
++*/
++	eeprom: eeprom@50 {
++		compatible = "atmel,24c04";
++		reg = <0x50>;
++	};
++
++	adrf6755: adrf6755@60 {
++		status = "okay";
++		compatible = "adrf6755";
++		reg = <0x60>;
++		ref_frequency_KHz = <0x2710>;
++		pfd_frequency_KHz = <0x4e20>;
++	};
++};
+diff --git a/board/xilinx/zynq/board.c b/board/xilinx/zynq/board.c
+index e865b54b..54e2dc07 100644
+--- a/board/xilinx/zynq/board.c
++++ b/board/xilinx/zynq/board.c
+@@ -338,9 +338,6 @@ int board_late_init(void)
+ 			hwaddr_set = true;
+ 			break;
+ 		}
+-
+-		if (!hwaddr_set)
+-			env_set("ethaddr", ENCLUSTRA_ETHADDR_DEFAULT);
+ 	}
+ 
+ #if defined(CONFIG_ZYNQ_QSPI)
+@@ -385,7 +382,8 @@ int checkboard(void)
+ int zynq_board_read_rom_ethaddr(unsigned char *ethaddr)
+ {
+ #if defined(CONFIG_ZYNQ_GEM_EEPROM_ADDR) && \
+-    defined(CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET)
++    defined(CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET) && \
++    defined(CONFIG_ZYNQ_EEPROM_BUS)
+ 	if (eeprom_read(CONFIG_ZYNQ_GEM_EEPROM_ADDR,
+ 			CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET,
+ 			ethaddr, 6))
+diff --git a/bscripts/mmcboot-rootfs b/bscripts/mmcboot-rootfs
+index 3c542d39..15243a12 100644
+--- a/bscripts/mmcboot-rootfs
++++ b/bscripts/mmcboot-rootfs
+@@ -1 +1,20 @@
+-run mmc_args && mmc rescan && load mmc 0 ${kernel_loadaddr} ${kernel_image} && load mmc 0 ${devicetree_loadaddr} ${devicetree_image} && run setupqspi && bootm ${kernel_loadaddr} - ${devicetree_loadaddr}
++# set LEDs
++i2c dev 1
++i2c mw 20 6 0
++i2c mw 20 7 0
++
++if test ${tsat_firmware_selector} = A; then
++  echo "(${tsat_firmware_selector}) => use firmware A"
++  setenv kpart ${tsat_mmc_kernel_partition_a}
++  setenv rpart ${tsat_mmc_rootfs_partition_a}
++else
++  echo "(${tsat_firmware_selector}) => use firmware B"
++  setenv kpart ${tsat_mmc_kernel_partition_b}
++  setenv rpart ${tsat_mmc_rootfs_partition_b}
++fi
++
++load mmc ${mmcdev}:${kpart} ${tsat_kernel_loadaddr} ${tsat_mmc_kernel_image}
++load mmc ${mmcdev}:${kpart} ${tsat_devicetree_loadaddr} ${tsat_mmc_devicetree_image}
++
++setenv bootargs ${tsat_def_args} rootwait root=/dev/mmcblk0p${rpart} copy=${tsat_firmware_selector}
++bootm ${tsat_kernel_loadaddr} - ${tsat_devicetree_loadaddr}
+diff --git a/bscripts/qspiboot-persistent b/bscripts/qspiboot-persistent
+index 73c76e24..e1903cba 100644
+--- a/bscripts/qspiboot-persistent
++++ b/bscripts/qspiboot-persistent
+@@ -1,7 +1,22 @@
+-run qspi_args;
+-sf read ${kernel_loadaddr} ${qspi_kernel_offset} ${kernel_size};
+-sf read ${devicetree_loadaddr} ${qspi_devicetree_offset} ${devicetree_size};
++# set LEDs
++i2c dev 1
++i2c mw 20 6 0
++i2c mw 20 7 0
+ 
+-run setupqspi;
++if test ${tsat_firmware_selector} = A; then
++  echo "(${tsat_firmware_selector}) => use firmware A"
++  setenv koff  ${tsat_qspi_kernel_offset_a}
++  setenv doff  ${tsat_qspi_devicetree_offset_a}
++  setenv rpart ${tsat_qspi_rootfs_partition_a}
++else
++  echo "(${tsat_firmware_selector}) => use firmware B"
++  setenv koff  ${tsat_qspi_kernel_offset_b}
++  setenv doff  ${tsat_qspi_devicetree_offset_b}
++  setenv rpart ${tsat_qspi_rootfs_partition_b}
++fi
+ 
+-bootm ${kernel_loadaddr} - ${devicetree_loadaddr}
++sf read ${tsat_kernel_loadaddr} ${koff} ${tsat_qspi_kernel_size};
++sf read ${tsat_devicetree_loadaddr} ${doff} ${tsat_qspi_devicetree_size};
++
++setenv bootargs ${tsat_def_args} root=/dev/${rpart} rootfstype=squashfs rootwait copy=${tsat_firmware_selector}
++bootm ${tsat_kernel_loadaddr} - ${tsat_devicetree_loadaddr}
+diff --git a/configs/enclustra_env_on_sd.appendix b/configs/enclustra_env_on_sd.appendix
+index bec2015d..1f41b08a 100644
+--- a/configs/enclustra_env_on_sd.appendix
++++ b/configs/enclustra_env_on_sd.appendix
+@@ -8,5 +8,5 @@ CONFIG_FAT_WRITE=y
+ #
+ CONFIG_ENV_IS_IN_FAT=y
+ CONFIG_ENV_FAT_INTERFACE="mmc"
+-CONFIG_ENV_FAT_DEVICE_AND_PART="0:1"
++CONFIG_ENV_FAT_DEVICE_AND_PART="0:2"
+ CONFIG_ENV_FAT_FILE="uboot.env"
+diff --git a/configs/zynq_mars_zx3_defconfig b/configs/zynq_mars_zx3_defconfig
+index 99959309..bd9aafb9 100644
+--- a/configs/zynq_mars_zx3_defconfig
++++ b/configs/zynq_mars_zx3_defconfig
+@@ -13,6 +13,7 @@ CONFIG_SPL_STACK_R=y
+ CONFIG_SPL_OS_BOOT=y
+ CONFIG_HUSH_PARSER=y
+ CONFIG_SYS_PROMPT="zynq-uboot> "
++CONFIG_CMD_EEPROM=y
+ CONFIG_CMD_DFU=y
+ # CONFIG_CMD_FLASH is not set
+ CONFIG_CMD_GPIO=y
+@@ -21,20 +22,18 @@ CONFIG_CMD_MMC=y
+ CONFIG_CMD_NAND_TRIMFFS=y
+ CONFIG_CMD_NAND_LOCK_UNLOCK=y
+ CONFIG_CMD_NAND_TORTURE=y
+-CONFIG_CMD_MTDPARTS=y
+-CONFIG_CMD_UBI=y
+ CONFIG_CMD_SF=y
+ CONFIG_CMD_SPI=y
+ CONFIG_CMD_USB=y
+ CONFIG_CMD_DHCP=y
+ CONFIG_CMD_MII=y
+ CONFIG_CMD_PING=y
+-CONFIG_CMD_EXT2=y
+ CONFIG_CMD_EXT4=y
+ CONFIG_CMD_EXT4_WRITE=y
+ CONFIG_CMD_FAT=y
+ CONFIG_CMD_FS_GENERIC=y
+ CONFIG_OF_EMBED=y
++CONFIG_ENV_IS_IN_SPI_FLASH=y
+ CONFIG_NET_RANDOM_ETHADDR=y
+ CONFIG_SPL_DM_SEQ_ALIAS=y
+ # CONFIG_SPL_BLK is not set
+@@ -46,6 +45,11 @@ CONFIG_MISC=y
+ CONFIG_ATSHA204A=y
+ CONFIG_ENCLUSTRA_EEPROM_MAC=y
+ CONFIG_I2C_EEPROM=y
++CONFIG_SYS_I2C_EEPROM_ADDR=0x50
++CONFIG_SYS_I2C_EEPROM_BUS=1
++CONFIG_SYS_EEPROM_SIZE=512
++CONFIG_SYS_EEPROM_PAGE_WRITE_BITS=8
++CONFIG_SYS_EEPROM_PAGE_WRITE_DELAY_MS=5
+ CONFIG_MMC_SDHCI=y
+ CONFIG_MMC_SDHCI_ZYNQ=y
+ CONFIG_NAND=y
+diff --git a/include/configs/enclustra_zx_common.h b/include/configs/enclustra_zx_common.h
+index b780156f..0bc29db7 100644
+--- a/include/configs/enclustra_zx_common.h
++++ b/include/configs/enclustra_zx_common.h
+@@ -41,7 +41,8 @@
+ #ifdef CONFIG_ENV_OFFSET
+ #undef CONFIG_ENV_OFFSET
+ #endif
+-#define CONFIG_ENV_OFFSET QSPI_SIZE - QSPI_BOOTARGS_SIZE
++/*#define CONFIG_ENV_OFFSET QSPI_SIZE - QSPI_BOOTARGS_SIZE*/
++#define CONFIG_ENV_OFFSET 0x540000
+ 
+ 
+ /* U-Boot environment is placed at the ubi */
+@@ -64,9 +65,10 @@
+ 
+ #define ENCLUSTRA_MAC               0xF7B020
+ 
+-/* Default MAC address */
+-#define ENCLUSTRA_ETHADDR_DEFAULT "00:0A:35:01:02:03"
+-#define ENCLUSTRA_ETH1ADDR_DEFAULT "00:0A:35:01:02:04"
++#define CONFIG_SYS_I2C_EEPROM_ADDR_LEN  1
++#define CONFIG_ZYNQ_EEPROM_BUS          1
++#define CONFIG_ZYNQ_GEM_EEPROM_ADDR     0x50
++#define CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET  0x0
+ 
+ /* Only one USB controller supported  */
+ #ifdef CONFIG_USB_MAX_CONTROLLER_COUNT
+@@ -149,13 +151,13 @@
+     "mtdparts=" MTDPARTS_DEFAULT "\0"           \
+     "env_size=" ENVIRONMENT_SIZE "\0"           \
+                                                 \
+-    QSPIBOOT_CMD                                \
++    "qspiboot=run tsat_qspiboot\0"              \
+                                                 \
+     "mmcdev=0\0"                                \
+                                                 \
+     "sdboot="                                   \
+         "setenv mmcdev 0;"                      \
+-        "run mmcboot\0"                         \
++        "run tsat_mmcboot\0"                    \
+                                                 \
+     "emmcboot="                                 \
+         "setenv mmcdev 1;"                      \
+@@ -191,5 +193,41 @@
+         "fdt set " QSPI_STRING "@qspi-device-tree reg <${qspi_devicetree_offset} ${devicetree_size}>; " \
+         "fdt set " QSPI_STRING "@qspi-bootargs reg <${qspi_env_offset} ${qspi_env_size}>; " \
+         "fdt set " QSPI_STRING "@qspi-bootscript reg <${qspi_bootscript_offset} ${bootscript_size}>; " \
+-        "fdt set " QSPI_STRING "@qspi-rootfs reg <${qspi_rootfs_offset} ${jffs2_size}>;\0"
++        "fdt set " QSPI_STRING "@qspi-rootfs reg <${qspi_rootfs_offset} ${jffs2_size}>;\0" \
++                                                    \
++    "tsat_firmware_selector=A\0"                    \
++    "tsat_def_args=console=ttyPS0,115200 ro earlyprintk\0"\
++    "tsat_bootscript_loadaddr=0x1000000\0"          \
++    "tsat_kernel_loadaddr=0x6000000\0"              \
++    "tsat_devicetree_loadaddr=0x6600000\0"          \
++                                                    \
++    "tsat_mmc_kernel_partition_a=5\0"               \
++    "tsat_mmc_kernel_partition_b=6\0"               \
++    "tsat_mmc_rootfs_partition_a=7\0"               \
++    "tsat_mmc_rootfs_partition_b=8\0"               \
++    "tsat_mmc_bootscript_image=uboot.scr\0"         \
++    "tsat_mmc_devicetree_image=devicetree.dtb\0"    \
++    "tsat_mmc_kernel_image=uImage\0"                \
++                                                    \
++    "tsat_mmcboot="                                 \
++        "mmc rescan && "                            \
++        "load mmc ${mmcdev} ${tsat_bootscript_loadaddr} ${tsat_mmc_bootscript_image} && "\
++        "source ${tsat_bootscript_loadaddr}\0"      \
++                                                    \
++    "tsat_qspi_bootscript_offset=0x500000\0"        \
++    "tsat_qspi_bootscript_size=0x40000\0"           \
++    "tsat_qspi_kernel_offset_a=0x05C0000\0"         \
++    "tsat_qspi_kernel_offset_b=0x1540000\0"         \
++    "tsat_qspi_kernel_size=0x440000\0"              \
++    "tsat_qspi_devicetree_offset_a=0x0A00000\0"     \
++    "tsat_qspi_devicetree_offset_b=0x1980000\0"     \
++    "tsat_qspi_devicetree_size=0x40000\0"           \
++    "tsat_qspi_rootfs_partition_a=mtdblock5\0"      \
++    "tsat_qspi_rootfs_partition_b=mtdblock8\0"      \
++                                                    \
++    "tsat_qspiboot=echo Bootinq on QSPI Flash ...; "\
++        "zx_set_storage QSPI && "                   \
++        "sf probe && "                              \
++        "sf read ${tsat_bootscript_loadaddr} ${tsat_qspi_bootscript_offset} ${tsat_qspi_bootscript_size} && "\
++        "source ${tsat_bootscript_loadaddr}\0"
+ #endif
+diff --git a/net/eth-uclass.c b/net/eth-uclass.c
+index d30b04ba..3ff6e61c 100644
+--- a/net/eth-uclass.c
++++ b/net/eth-uclass.c
+@@ -57,6 +57,26 @@ void eth_set_current_to_next(void)
+ 		uclass_first_device(UCLASS_ETH, &uc_priv->current);
+ }
+ 
++/**
++ * inc_byte_array - Increment arbitrary length byte array by one
++ * @counter: Pointer to byte array
++ * @len: Length of the counter in bytes
++ *
++ * This function increments the last byte of the counter by one and continues
++ * rolling over to more significant bytes if the byte was incremented from
++ * 0xff to 0x00.
++ */
++static void inc_byte_array(u8 *counter, size_t len)
++{
++	int pos = len - 1;
++	while (pos >= 0) {
++		counter[pos]++;
++		if (counter[pos] != 0)
++			break;
++		pos--;
++	}
++}
++
+ /*
+  * Typically this will simply return the active device.
+  * In the case where the most recent active device was unset, this will attempt
+@@ -511,8 +531,13 @@ static int eth_post_probe(struct udevice *dev)
+ 		memcpy(pdata->enetaddr, env_enetaddr, ARP_HLEN);
+ 	} else if (is_valid_ethaddr(pdata->enetaddr)) {
+ 		eth_env_set_enetaddr_by_index("eth", dev->seq, pdata->enetaddr);
+-		printf("\nWarning: %s using MAC address from ROM\n",
+-		       dev->name);
++		printf("\nWarning: %s using MAC0 address from ROM %pM\n",
++		       dev->name, pdata->enetaddr);
++		/*increment*/
++		inc_byte_array(pdata->enetaddr, 6);
++		eth_env_set_enetaddr_by_index("eth1", dev->seq, pdata->enetaddr);
++		printf("Warning: %s using MAC1 address from ROM %pM\n\n",
++		       dev->name, pdata->enetaddr);
+ 	} else if (is_zero_ethaddr(pdata->enetaddr) ||
+ 		   !is_valid_ethaddr(pdata->enetaddr)) {
+ #ifdef CONFIG_NET_RANDOM_ETHADDR
