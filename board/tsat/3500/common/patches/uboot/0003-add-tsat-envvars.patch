@@ -1,0 +1,87 @@
+diff --git a/include/configs/enclustra_zx_common.h b/include/configs/enclustra_zx_common.h
+index b780156f..0bc29db7 100644
+--- a/include/configs/enclustra_zx_common.h
++++ b/include/configs/enclustra_zx_common.h
+@@ -41,7 +41,8 @@
+ #ifdef CONFIG_ENV_OFFSET
+ #undef CONFIG_ENV_OFFSET
+ #endif
+-#define CONFIG_ENV_OFFSET QSPI_SIZE - QSPI_BOOTARGS_SIZE
++/*#define CONFIG_ENV_OFFSET QSPI_SIZE - QSPI_BOOTARGS_SIZE*/
++#define CONFIG_ENV_OFFSET 0x540000
+ 
+ 
+ /* U-Boot environment is placed at the ubi */
+@@ -64,9 +65,10 @@
+ 
+ #define ENCLUSTRA_MAC               0xF7B020
+ 
+-/* Default MAC address */
+-#define ENCLUSTRA_ETHADDR_DEFAULT "00:0A:35:01:02:03"
+-#define ENCLUSTRA_ETH1ADDR_DEFAULT "00:0A:35:01:02:04"
++#define CONFIG_SYS_I2C_EEPROM_ADDR_LEN  1
++#define CONFIG_ZYNQ_EEPROM_BUS          1
++#define CONFIG_ZYNQ_GEM_EEPROM_ADDR     0x50
++#define CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET  0x0
+ 
+ /* Only one USB controller supported  */
+ #ifdef CONFIG_USB_MAX_CONTROLLER_COUNT
+@@ -149,13 +151,13 @@
+     "mtdparts=" MTDPARTS_DEFAULT "\0"           \
+     "env_size=" ENVIRONMENT_SIZE "\0"           \
+                                                 \
+-    QSPIBOOT_CMD                                \
++    "qspiboot=run tsat_qspiboot\0"              \
+                                                 \
+     "mmcdev=0\0"                                \
+                                                 \
+     "sdboot="                                   \
+         "setenv mmcdev 0;"                      \
+-        "run mmcboot\0"                         \
++        "run tsat_mmcboot\0"                    \
+                                                 \
+     "emmcboot="                                 \
+         "setenv mmcdev 1;"                      \
+@@ -191,5 +193,41 @@
+         "fdt set " QSPI_STRING "@qspi-device-tree reg <${qspi_devicetree_offset} ${devicetree_size}>; " \
+         "fdt set " QSPI_STRING "@qspi-bootargs reg <${qspi_env_offset} ${qspi_env_size}>; " \
+         "fdt set " QSPI_STRING "@qspi-bootscript reg <${qspi_bootscript_offset} ${bootscript_size}>; " \
+-        "fdt set " QSPI_STRING "@qspi-rootfs reg <${qspi_rootfs_offset} ${jffs2_size}>;\0"
++        "fdt set " QSPI_STRING "@qspi-rootfs reg <${qspi_rootfs_offset} ${jffs2_size}>;\0" \
++                                                    \
++    "tsat_firmware_selector=A\0"                    \
++    "tsat_def_args=console=ttyPS0,115200 ro earlyprintk\0"\
++    "tsat_bootscript_loadaddr=0x1000000\0"          \
++    "tsat_kernel_loadaddr=0x6000000\0"              \
++    "tsat_devicetree_loadaddr=0x6600000\0"          \
++                                                    \
++    "tsat_mmc_kernel_partition_a=5\0"               \
++    "tsat_mmc_kernel_partition_b=6\0"               \
++    "tsat_mmc_rootfs_partition_a=7\0"               \
++    "tsat_mmc_rootfs_partition_b=8\0"               \
++    "tsat_mmc_bootscript_image=uboot.scr\0"         \
++    "tsat_mmc_devicetree_image=devicetree.dtb\0"    \
++    "tsat_mmc_kernel_image=uImage\0"                \
++                                                    \
++    "tsat_mmcboot="                                 \
++        "mmc rescan && "                            \
++        "load mmc ${mmcdev} ${tsat_bootscript_loadaddr} ${tsat_mmc_bootscript_image} && "\
++        "source ${tsat_bootscript_loadaddr}\0"      \
++                                                    \
++    "tsat_qspi_bootscript_offset=0x500000\0"        \
++    "tsat_qspi_bootscript_size=0x40000\0"           \
++    "tsat_qspi_kernel_offset_a=0x05C0000\0"         \
++    "tsat_qspi_kernel_offset_b=0x1540000\0"         \
++    "tsat_qspi_kernel_size=0x440000\0"              \
++    "tsat_qspi_devicetree_offset_a=0x0A00000\0"     \
++    "tsat_qspi_devicetree_offset_b=0x1980000\0"     \
++    "tsat_qspi_devicetree_size=0x40000\0"           \
++    "tsat_qspi_rootfs_partition_a=mtdblock5\0"      \
++    "tsat_qspi_rootfs_partition_b=mtdblock8\0"      \
++                                                    \
++    "tsat_qspiboot=echo Bootinq on QSPI Flash ...; "\
++        "zx_set_storage QSPI && "                   \
++        "sf probe && "                              \
++        "sf read ${tsat_bootscript_loadaddr} ${tsat_qspi_bootscript_offset} ${tsat_qspi_bootscript_size} && "\
++        "source ${tsat_bootscript_loadaddr}\0"
+ #endif

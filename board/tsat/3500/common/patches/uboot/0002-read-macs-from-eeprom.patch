@@ -1,0 +1,72 @@
+diff --git a/board/xilinx/zynq/board.c b/board/xilinx/zynq/board.c
+index e865b54b..54e2dc07 100644
+--- a/board/xilinx/zynq/board.c
++++ b/board/xilinx/zynq/board.c
+@@ -338,9 +338,6 @@ int board_late_init(void)
+ 			hwaddr_set = true;
+ 			break;
+ 		}
+-
+-		if (!hwaddr_set)
+-			env_set("ethaddr", ENCLUSTRA_ETHADDR_DEFAULT);
+ 	}
+ 
+ #if defined(CONFIG_ZYNQ_QSPI)
+@@ -385,7 +382,8 @@ int checkboard(void)
+ int zynq_board_read_rom_ethaddr(unsigned char *ethaddr)
+ {
+ #if defined(CONFIG_ZYNQ_GEM_EEPROM_ADDR) && \
+-    defined(CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET)
++    defined(CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET) && \
++    defined(CONFIG_ZYNQ_EEPROM_BUS)
+ 	if (eeprom_read(CONFIG_ZYNQ_GEM_EEPROM_ADDR,
+ 			CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET,
+ 			ethaddr, 6))
+
+diff --git a/net/eth-uclass.c b/net/eth-uclass.c
+index d30b04ba..3ff6e61c 100644
+--- a/net/eth-uclass.c
++++ b/net/eth-uclass.c
+@@ -57,6 +57,26 @@ void eth_set_current_to_next(void)
+ 		uclass_first_device(UCLASS_ETH, &uc_priv->current);
+ }
+ 
++/**
++ * inc_byte_array - Increment arbitrary length byte array by one
++ * @counter: Pointer to byte array
++ * @len: Length of the counter in bytes
++ *
++ * This function increments the last byte of the counter by one and continues
++ * rolling over to more significant bytes if the byte was incremented from
++ * 0xff to 0x00.
++ */
++static void inc_byte_array(u8 *counter, size_t len)
++{
++	int pos = len - 1;
++	while (pos >= 0) {
++		counter[pos]++;
++		if (counter[pos] != 0)
++			break;
++		pos--;
++	}
++}
++
+ /*
+  * Typically this will simply return the active device.
+  * In the case where the most recent active device was unset, this will attempt
+@@ -511,8 +531,13 @@ static int eth_post_probe(struct udevice *dev)
+ 		memcpy(pdata->enetaddr, env_enetaddr, ARP_HLEN);
+ 	} else if (is_valid_ethaddr(pdata->enetaddr)) {
+ 		eth_env_set_enetaddr_by_index("eth", dev->seq, pdata->enetaddr);
+-		printf("\nWarning: %s using MAC address from ROM\n",
+-		       dev->name);
++		printf("\nWarning: %s using MAC0 address from ROM %pM\n",
++		       dev->name, pdata->enetaddr);
++		/*increment*/
++		inc_byte_array(pdata->enetaddr, 6);
++		eth_env_set_enetaddr_by_index("eth1", dev->seq, pdata->enetaddr);
++		printf("Warning: %s using MAC1 address from ROM %pM\n\n",
++		       dev->name, pdata->enetaddr);
+ 	} else if (is_zero_ethaddr(pdata->enetaddr) ||
+ 		   !is_valid_ethaddr(pdata->enetaddr)) {
+ #ifdef CONFIG_NET_RANDOM_ETHADDR
