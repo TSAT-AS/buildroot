@@ -2374,6 +2374,6 @@ endmenu
 
 endmenu
 
-menu "TSAT"
+menu "Target packages (TSAT)"
 	source "package/tsat/Config.in"
 endmenu
