@@ -1,0 +1,12 @@
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+index f598ecddc..6a13b8502 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -253,6 +253,7 @@ static const struct dev_pm_ops uio_pdrv_genirq_dev_pm_ops = {
+ 
+ #ifdef CONFIG_OF
+ static struct of_device_id uio_of_genirq_match[] = {
++        { .compatible = "generic-uio", },
+ 	{ /* This is filled with module_parm */ },
+ 	{ /* Sentinel */ },
+ };
