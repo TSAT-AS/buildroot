@@ -1,0 +1,80 @@
+diff --git a/arch/arm/dts/zynq-mars-zx3.dts b/arch/arm/dts/zynq-mars-zx3.dts
+index be183f46..6849bdce 100644
+--- a/arch/arm/dts/zynq-mars-zx3.dts
++++ b/arch/arm/dts/zynq-mars-zx3.dts
+@@ -14,13 +14,22 @@
+ 	compatible = "xlnx,zynq-7000";
+ 
+ 	aliases {
++		eeprom0 = &eeprom;
+ 		ethernet0 = &gem0;
++		ethernet1 = &gem1;
+ 		mmc0 = &sdhci0;
+ 		serial0 = &uart0;
+ 		spi0 = &qspi;
+ 		usb0 = &usb0;
+ 		gpio0 = &gpio0;
++		gpio1 = &tca6416_led;
++		gpio2 = &tca6416_gpio;
+ 		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++	};
++
++	chosen {
++		stdout-path = &uart0;
+ 	};
+ 
+ 	memory {
+@@ -68,3 +77,52 @@
+ 		reg = <0x64>;
+ 	};
+ };
++
++&i2c1 {
++	status = "okay";
++
++	tca6416_led: gpio@20 {
++		compatible = "ti,tca6416";
++		reg = <0x20>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	tca6416_gpio: gpio@21 {
++		compatible = "ti,tca6416";
++		reg = <0x21>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	ina226_rx: ina226@40 {
++		compatible = "ti,ina226";
++		ti,rail-name = "RX";
++		reg = <0x40>;
++		shunt-resistor = <40000>;
++	};
++
++	ina226_tx: ina226@41 {
++		compatible = "ti,ina226";
++		ti,rail-name = "TX";
++		reg = <0x41>;
++		shunt-resistor = <10000>;
++	};
++/*
++	ADS1000@48 {
++
++	}
++*/
++	eeprom: eeprom@50 {
++		compatible = "atmel,24c04";
++		reg = <0x50>;
++	};
++
++	adrf6755: adrf6755@60 {
++		status = "okay";
++		compatible = "adrf6755";
++		reg = <0x60>;
++		ref_frequency_KHz = <0x2710>;
++		pfd_frequency_KHz = <0x4e20>;
++	};
++};
