@@ -83,3 +83,7 @@ menu "Host utilities"
 	source "package/zstd/Config.in.host"
 
 endmenu
+
+menu "Host utilities (TSAT)"
+	source "package/tsat/Config.in.host"
+endmenu
