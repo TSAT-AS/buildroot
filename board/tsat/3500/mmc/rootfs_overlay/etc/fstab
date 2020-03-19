@@ -7,9 +7,11 @@ tmpfs       /tmp        tmpfs   mode=1777 0 0
 tmpfs       /run        tmpfs   mode=0755,nosuid,nodev 0 0
 sysfs       /sys        sysfs   defaults,noauto 0 0
 
-/dev/mmcblk0p2  /boot         vfat    defaults 0 2
-/dev/mmcblk0p9  /overlay      ext4    defaults,noauto 0 0
-/dev/mmcblk0p10 /root         ext4    defaults 0 2
-
-overlay     /etc          overlay defaults,lowerdir=/etc,upperdir=/overlay/etc,workdir=/overlay/work 0 0
+# FPGA bit-file programming dir
 tmpfs       /lib/firmware tmpfs   defaults 0 0
+
+# U-Boot environment
+/dev/mmcblk0p2  /boot   vfat    defaults 0 2
+
+# appfs
+/dev/mmcblk0p9  /root   ext4    defaults 0 2
