@@ -4,7 +4,9 @@ set -e
 
 # normalize devicetree filename
 for dtb in $1/*.dtb; do
-  mv -v -- "$dtb" "$1/devicetree.dtb"
+  if [ "$(basename "$dtb")" != 'devicetree.dtb' ]; then
+    mv -v -- "$dtb" "$1/devicetree.dtb"
+  fi
 done
 
 # fetch latest terminal and fpga
