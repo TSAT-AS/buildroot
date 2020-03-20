@@ -16,9 +16,9 @@ mkdir -p "$FPGA_DIR"
 mkdir -p "$TERM_DIR"
 
 . board/tsat/3500/common/constants.sh
-scp "$HOST:$DIR_LATEST_FPGA/*.swu"        "$FPGA_DIR"
-scp "$HOST:$DIR_LATEST_FPGA/*.tar.gz"     "$FPGA_DIR"
-scp "$HOST:$DIR_LATEST_TERMINAL/*.swu"    "$TERM_DIR"
+scp "$HOST:$DIR_LATEST_FPGA/*.swu"        "$FPGA_DIR/fpga.swu"
+scp "$HOST:$DIR_LATEST_FPGA/*.tar.gz"     "$FPGA_DIR/fpga.tar.gz"
+scp "$HOST:$DIR_LATEST_TERMINAL/*.swu"    "$TERM_DIR/terminal.swu"
 scp "$HOST:$DIR_LATEST_TERMINAL/*.tar.gz" "$TERM_DIR/terminal.tar.gz"
 
 # populate appfs directory
