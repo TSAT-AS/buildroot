@@ -2,9 +2,10 @@
 
 set -e
 
-cp -- board/tsat/3500/common/images/boot.bif "$1"
-cp -- ../binaries/fsbl.elf "$1"
-cp -- ../binaries/fpga.bit "$1"
+# normalize devicetree filename
+for dtb in $1/*.dtb; do
+  mv -v -- "$dtb" "$1/devicetree.dtb"
+done
 
 # fetch latest terminal and fpga
 FPGA_DIR="$1/fpga"
@@ -32,6 +33,10 @@ ln -snf "$(basename "$APPFS_FPGA_DIR")/fpga_viterbi_low.bit" "$APPFS_DIR/fpga.bi
 ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
 
 # build boot image
+cp -- board/tsat/3500/common/images/boot.bif "$1"
+cp -- ../binaries/fsbl.elf "$1"
+cp -- ../binaries/fpga.bit "$1"
+
 BOOT_IMG='boot.bin'
 echo "Creating boot image: $1/$BOOT_IMG"
 
