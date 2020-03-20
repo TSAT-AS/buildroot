@@ -1,0 +1,5 @@
+config BR2_PACKAGE_HOST_MKSWU
+	bool "mkswu"
+	default y
+	help
+	  Scripts to generate swupdate upgrade packages
