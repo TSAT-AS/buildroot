@@ -12,6 +12,7 @@ BR2_TARGET_GENERIC_GETTY_PORT="ttyPS0"
 # BR2_TARGET_GENERIC_REMOUNT_ROOTFS_RW is not set
 BR2_ROOTFS_OVERLAY="board/tsat/3500/common/rootfs_overlay board/tsat/3500/mmc/rootfs_overlay"
 BR2_ROOTFS_POST_BUILD_SCRIPT="board/enclustra/ebe_overlays.sh"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="board/tsat/3500/common/post_image.sh"
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_GIT=y
 BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/enclustra-bsp/xilinx-linux.git"
