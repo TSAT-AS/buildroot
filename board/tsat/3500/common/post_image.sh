@@ -17,7 +17,7 @@ mkdir -p "$TERM_DIR"
 
 . board/tsat/3500/common/constants.sh
 scp "$HOST:$DIR_LATEST_FPGA/*.swu"        "$FPGA_DIR/fpga.swu"
-scp "$HOST:$DIR_LATEST_FPGA/*.tar.gz"     "$FPGA_DIR/fpga.tar.gz"
+scp "$HOST:$DIR_LATEST_FPGA/*.tar"        "$FPGA_DIR/fpga.tar"
 scp "$HOST:$DIR_LATEST_TERMINAL/*.swu"    "$TERM_DIR/terminal.swu"
 scp "$HOST:$DIR_LATEST_TERMINAL/*.tar.gz" "$TERM_DIR/terminal.tar.gz"
 
@@ -29,7 +29,7 @@ mkdir -p "$APPFS_DIR"
 mkdir -p "$APPFS_FPGA_DIR"
 mkdir -p "$APPFS_TERM_DIR"
 
-tar -x --no-same-owner -v -f "$FPGA_DIR/fpga.tar.gz" -C "$APPFS_FPGA_DIR"
+tar -x --no-same-owner -v -f "$FPGA_DIR/fpga.tar" -C "$APPFS_FPGA_DIR"
 tar -x --no-same-owner -v -f "$TERM_DIR/terminal.tar.gz" -C "$APPFS_TERM_DIR"
 ln -snf "$(basename "$APPFS_FPGA_DIR")/fpga_viterbi_low.bit" "$APPFS_DIR/fpga.bit"
 ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
