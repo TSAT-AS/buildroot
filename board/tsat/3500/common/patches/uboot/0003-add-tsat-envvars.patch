@@ -59,7 +59,7 @@ index b780156f..0bc29db7 100644
 +    "tsat_mmc_kernel_partition_b=6\0"               \
 +    "tsat_mmc_rootfs_partition_a=7\0"               \
 +    "tsat_mmc_rootfs_partition_b=8\0"               \
-+    "tsat_mmc_bootscript_image=uboot.scr\0"         \
++    "tsat_mmc_bootscript_image=boot.scr\0"          \
 +    "tsat_mmc_devicetree_image=devicetree.dtb\0"    \
 +    "tsat_mmc_kernel_image=uImage\0"                \
 +                                                    \
