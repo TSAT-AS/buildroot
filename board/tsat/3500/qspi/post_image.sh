@@ -4,9 +4,10 @@ set -e
 
 # create appfs filesystem
 APPFS_INPUT="$1/appfs"
-APPFS_OUTOUT="$1/appfs.jffs2"
+APPFS_OUTPUT="$1/appfs.jffs2"
 test -d "$APPFS_INPUT" || exit 1
-output/host/sbin/mkfs.jffs2 -v -U -e 256 -l -d "$APPFS_INPUT" -o "$APPFS_OUTOUT"
+test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
+output/host/sbin/mkfs.jffs2 -v -U -e 256 -l -d "$APPFS_INPUT" -o "$APPFS_OUTPUT"
 
 # generate qspi full image
 cp -- board/tsat/3500/qspi/images/full.bif "$1"

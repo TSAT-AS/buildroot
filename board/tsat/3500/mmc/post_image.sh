@@ -4,10 +4,11 @@ set -e
 
 # create appfs filesystem
 APPFS_INPUT="$1/appfs"
-APPFS_OUTOUT="$1/appfs.ext4"
+APPFS_OUTPUT="$1/appfs.ext4"
 APPFS_SIZE='256M'
 test -d "$APPFS_INPUT" || exit 1
-output/host/sbin/mkfs.ext4 -v -d "$APPFS_INPUT" -E 'root_owner=0:0,lazy_itable_init=0,lazy_journal_init=0' -L 'APP' -O '^64bit' "$APPFS_OUTOUT" "$APPFS_SIZE"
+test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
+output/host/sbin/mkfs.ext4 -v -d "$APPFS_INPUT" -E 'root_owner=0:0,lazy_itable_init=0,lazy_journal_init=0' -L 'APP' -O '^64bit' "$APPFS_OUTPUT" "$APPFS_SIZE"
 
 # create boot-, env- and kernel filesystems
 support/scripts/genimage.sh -c board/tsat/3500/mmc/images/filesystems.cfg
