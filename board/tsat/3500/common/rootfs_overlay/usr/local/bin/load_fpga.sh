@@ -20,8 +20,8 @@ fi
 FPGA_MD5="$(md5sum "$FPGA_FILE" | cut -d' ' -f1)"
 FPGA_NAME="${FPGA_MD5}"
 
-# cleanup the firmware directory
-rm -- $FW_PATH/* 2>/dev/null || echo "/lib/firmware is empty"
+# cleanup existing files in the firmware directory
+rm -- $FW_PATH/* 2>/dev/null
 
 # extract the specified FPGA image into the firmware directory
 unxz -c -- "$FPGA_FILE" > "$FW_PATH/$FPGA_NAME"
