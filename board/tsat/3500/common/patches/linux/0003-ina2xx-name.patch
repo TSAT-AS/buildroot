@@ -1,0 +1,11 @@
+--- a/drivers/iio/adc/ina2xx-adc.c	2020-04-02 13:13:16.196743929 +0200
++++ b/drivers/iio/adc/ina2xx-adc.c	2020-04-02 13:16:12.574840587 +0200
+@@ -882,7 +882,7 @@
+ 		indio_dev->num_channels = ARRAY_SIZE(ina219_channels);
+ 		indio_dev->info = &ina219_info;
+ 	}
+-	indio_dev->name = id->name;
++	indio_dev->name = client->dev.of_node->name;
+ 	indio_dev->setup_ops = &ina2xx_setup_ops;
+
+ 	buffer = devm_iio_kfifo_allocate(&indio_dev->dev);

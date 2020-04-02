@@ -339,16 +339,14 @@
 		#gpio-cells = <2>;
 	};
 
-	ina226_rx: ina226@40 {
+	ina226_rx: ina226rx@40 {
 		compatible = "ti,ina226";
-		ti,rail-name = "RX";
 		reg = <0x40>;
 		shunt-resistor = <40000>;
 	};
 
-	ina226_tx: ina226@41 {
+	ina226_tx: ina226tx@41 {
 		compatible = "ti,ina226";
-		ti,rail-name = "TX";
 		reg = <0x41>;
 		shunt-resistor = <10000>;
 	};
