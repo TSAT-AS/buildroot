@@ -6,7 +6,7 @@
 
 HOST_MKSWU_SITE_METHOD = git
 HOST_MKSWU_SITE = ssh://git@dev.tsat.net:7999/tsat3k/image-builder.git
-HOST_MKSWU_VERSION = bce0c917cff3b24e1b56ba3f61daa5c54bd7aaa2
+HOST_MKSWU_VERSION = dd8dd12b63c43f14ba02cfa18da0d67eacea42de
 HOST_MKSWU_DEPENDENCIES = host-openssl host-cpio
 
 define HOST_MKSWU_INSTALL_CMDS
