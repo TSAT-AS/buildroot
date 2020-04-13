@@ -21,4 +21,4 @@ mkbootimage full.bif "$FULL_IMG"
 # generate qspi swu packages
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
 $HOST_DIR/bin/mkswu-qspi-system 'uImage' 'devicetree.dtb' 'rootfs.squashfs'
-$HOST_DIR/bin/mkswu-qspi-full 'qspi-system.swu' 'terminal/terminal.swu' 'fpga/fpga.swu'
+$HOST_DIR/bin/mkswu-qspi-full 'qspi-system.swu' 'terminal.swu' 'fpga.swu'

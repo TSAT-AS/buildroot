@@ -16,9 +16,8 @@ APPFS_TERM_DIR="$APPFS_DIR/terminal"
 mkdir -p "$APPFS_DIR"
 mkdir -p "$APPFS_FPGA_DIR"
 mkdir -p "$APPFS_TERM_DIR"
-
-tar -x --no-same-owner -v -f "$1/fpga.tar*" -C "$APPFS_FPGA_DIR"
-tar -x --no-same-owner -v -f "$1/terminal.tar*" -C "$APPFS_TERM_DIR"
+tar -x --no-same-owner -v -f "$1/fpga.tar.gz" -C "$APPFS_FPGA_DIR"
+tar -x --no-same-owner -v -f "$1/terminal.tar.gz" -C "$APPFS_TERM_DIR"
 ln -snf "$(basename "$APPFS_FPGA_DIR")/fpga_viterbi_low.bit" "$APPFS_DIR/fpga.bit"
 ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
 
@@ -32,3 +31,10 @@ echo "Creating boot image: $1/$BOOT_IMG"
 
 cd -- "$1"
 mkbootimage boot.bif "$BOOT_IMG"
+
+# create terminal and fpga SWUs
+export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
+export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/fpga-postinstall.sh"
+$HOST_DIR/bin/mkswu-fpga 'fpga.tar.gz'
+export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/terminal-postinstall.sh"
+$HOST_DIR/bin/mkswu-terminal 'terminal.tar.gz'

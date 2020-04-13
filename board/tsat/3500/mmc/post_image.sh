@@ -21,4 +21,4 @@ cd -- "$1"
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
 export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/mmc-system-postinstall.sh"
 $HOST_DIR/bin/mkswu-mmc-system 'kernel.vfat' 'rootfs.ext4'
-$HOST_DIR/bin/mkswu-mmc-full 'mmc-system.swu' 'terminal/terminal.swu' 'fpga/fpga.swu'
+$HOST_DIR/bin/mkswu-mmc-full 'mmc-system.swu' 'terminal.swu' 'fpga.swu'
