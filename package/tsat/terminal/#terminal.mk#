@@ -1,0 +1,12 @@
+################################################################################
+#
+# terminal
+#
+################################################################################
+
+TERMINAL_SITE_METHOD = git
+TERMINAL_SITE = ssh://git@dev.tsat.net:7999/tsat3k/terminal-converted.git
+TERMINAL_VERSION = 3cbc7d33f3cc15ff4492e858779c4a584f006A13f
+TERMINAL_DEPENDECIES = host-cmake
+
+$(eval $(cmake-package))
