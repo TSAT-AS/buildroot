@@ -1,0 +1,5 @@
+config BR2_PACKAGE_HOST_BOOTGEN
+	bool "bootgen"
+	default y
+	help
+	  Xilinx boot image builder
