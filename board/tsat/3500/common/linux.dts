@@ -144,9 +144,9 @@
 			label = "rootfs-data";
 			reg = <0x24C0000 0x140000>;
 		};
-		partition@25C0000 {
+		partition@2600000 {
 			label = "appfs";
-			reg = <0x25C0000 0x1A00000>;
+			reg = <0x2600000 0x1A00000>;
 		};
 	};
 };
