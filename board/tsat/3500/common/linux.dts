@@ -226,72 +226,72 @@
 	gpio-leds {
 		compatible = "gpio-leds";
 		led0 {
-			label = "board:green:app:tx";
+			label = "board:green:tx";
 			gpios = <&tca6416_led 0 0>;
 			default-state = "off";
 		};
 		led1 {
-			label = "board:red:app:tx";
+			label = "board:red:tx";
 			gpios = <&tca6416_led 1 0>;
 			default-state = "off";
 		};
 		led2 {
-			label = "board:green:app:rx";
+			label = "board:green:rx";
 			gpios = <&tca6416_led 2 0>;
 			default-state = "off";
 		};
 		led3 {
-			label = "board:red:app:rx";
+			label = "board:red:rx";
 			gpios = <&tca6416_led 3 0>;
 			default-state = "off";
 		};
 		led4 {
-			label = "board:green:sat:tx";
+			label = "board:green:lnk";
 			gpios = <&tca6416_led 4 0>;
 			default-state = "off";
 		};
 		led5 {
-			label = "board:red:sat:tx";
+			label = "board:red:lnk";
 			gpios = <&tca6416_led 5 0>;
 			default-state = "off";
 		};
 		led6 {
-			label = "board:green:sat:rx";
+			label = "board:green:loc";
 			gpios = <&tca6416_led 6 0>;
 			default-state = "off";
 		};
 		led7 {
-			label = "board:red:sat:rx";
+			label = "board:red:loc";
 			gpios = <&tca6416_led 7 0>;
 			default-state = "off";
 		};
 		led8 {
-			label = "board:green:lnk";
+			label = "board:green:buc";
 			gpios = <&tca6416_led 8 0>;
 			default-state = "off";
 		};
 		led9 {
-			label = "board:red:lnk";
+			label = "board:red:buc";
 			gpios = <&tca6416_led 9 0>;
 			default-state = "off";
 		};
 		led10 {
-			label = "board:green:loc";
+			label = "board:green:lnb";
 			gpios = <&tca6416_led 10 0>;
 			default-state = "off";
 		};
 		led11 {
-			label = "board:red:loc";
+			label = "board:red:lnb";
 			gpios = <&tca6416_led 11 0>;
 			default-state = "off";
 		};
 		led12 {
-			label = "board:green:sys";
+			label = "board:green:cpu";
 			gpios = <&tca6416_led 12 0>;
 			default-state = "off";
 		};
 		led13 {
-			label = "board:red:sys";
+			label = "board:red:cpu";
 			gpios = <&tca6416_led 13 0>;
 			default-state = "off";
 		};
