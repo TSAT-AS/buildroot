@@ -4,13 +4,12 @@
 #
 
 LOG_DIR='/var/log'
-SAVE_DIR='/root/saved_logs'
 
 stop() {
 	echo "Saving terminal logs..."
 	test -d "$SAVE_DIR" && rm -rf "$SAVE_DIR"
-	mkdir -p "$SAVE_DIR"
-	cp -v $LOG_DIR/terminal.*.log "$SAVE_DIR"
+	cd $LOG_DIR
+	tar cf - *.log | gzip -9 > /root/logs.tar.gz
 	echo "Done"
 }
 
