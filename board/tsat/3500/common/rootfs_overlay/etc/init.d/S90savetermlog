@@ -5,9 +5,15 @@
 
 LOG_DIR='/var/log'
 
+start() {
+	echo "Unpacking logs..."
+	# have to do this in two steps since busybox tar doesnt support gzip
+	gunzip -dc /root/logs.tar.gz | tar xf - -C $LOG_DIR
+	echo "Done"
+}
+
 stop() {
-	echo "Saving terminal logs..."
-	test -d "$SAVE_DIR" && rm -rf "$SAVE_DIR"
+	echo "Saving logs..."
 	cd $LOG_DIR
 	tar cf - *.log | gzip -9 > /root/logs.tar.gz
 	echo "Done"
