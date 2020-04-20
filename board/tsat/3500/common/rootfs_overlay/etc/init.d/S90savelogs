@@ -4,18 +4,19 @@
 #
 
 LOG_DIR='/var/log'
+LOG_TARBALL="/root/logs.tar.gz"
 
 start() {
 	echo "Unpacking logs..."
 	# have to do this in two steps since busybox tar doesnt support gzip
-	gunzip -dc /root/logs.tar.gz | tar xf - -C $LOG_DIR
+	gunzip -dc $LOG_TARBALL | tar xf - -C $LOG_DIR
 	echo "Done"
 }
 
 stop() {
 	echo "Saving logs..."
 	cd $LOG_DIR
-	tar cf - *.log | gzip -9 > /root/logs.tar.gz
+	tar cf - *.log | gzip -9 > $LOG_TARBALL
 	echo "Done"
 }
 
@@ -27,7 +28,7 @@ case "$1" in
 	stop
 	;;
   *)
-	echo "Usage: $0 {stop}"
+	echo "Usage: $0 {start|stop}"
 	exit 1
 esac
 
