@@ -21,7 +21,7 @@ stop() {
 
 case "$1" in
   start)
-	# nothing to do
+	start
 	;;
   stop)
 	stop
