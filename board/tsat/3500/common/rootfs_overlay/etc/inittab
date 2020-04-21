@@ -26,6 +26,9 @@
 # Mount remaining entries
 ::sysinit:/bin/mount -a
 
+# Add link to terminal log directory
+::sysinit:/bin/ln -snf /var/log /root/logs
+
 null::sysinit:/bin/ln -sf /proc/self/fd /dev/fd
 null::sysinit:/bin/ln -sf /proc/self/fd/0 /dev/stdin
 null::sysinit:/bin/ln -sf /proc/self/fd/1 /dev/stdout
