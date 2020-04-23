@@ -10,9 +10,5 @@ sysfs       /sys        sysfs   defaults,noauto 0 0
 # FPGA bit-file programming dir
 tmpfs       /lib/firmware tmpfs   defaults 0 0
 
-# mutable rootfs overlay
-mtd9        /overlay      jffs2   defaults 0 0
-overlay     /etc          overlay defaults,lowerdir=/etc,upperdir=/overlay/etc,workdir=/overlay/work 0 0
-
 # appfs
 mtd10       /root         jffs2   defaults 0 0
