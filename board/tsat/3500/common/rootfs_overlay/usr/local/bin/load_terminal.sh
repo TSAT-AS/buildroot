@@ -3,12 +3,19 @@ set -e # fail fast
 
 RUN_SCRIPT='run.sh'
 BASE_DIR='/root'
+NOAUTO_FLAG='/root/flags/noauto'
 
 CURRENT_BASE_DIR="$BASE_DIR/current"
 NEXT_BASE_DIR="$BASE_DIR/next"
 
 CURRENT_RUN_SCRIPT="$CURRENT_BASE_DIR/$RUN_SCRIPT"
 NEXT_RUN_SCRIPT="$NEXT_BASE_DIR/$RUN_SCRIPT"
+
+# do nothing if noauto flag is present
+if [ -f "$NOAUTO_FLAG" ]; then
+  sleep 30
+  exit 0
+fi
 
 # start new terminal if "next" symlink exist and it contains a run script
 if [ -h "$NEXT_BASE_DIR" ]; then
