@@ -2,6 +2,12 @@
 
 set -e
 
+# normalize Linux kernel filename (for bootgen)
+KERNEL="$1/uImage"
+if [ -f "$KERNEL" ]; then
+  mv -v -- "$KERNEL" "$KERNEL.bin"
+fi
+
 # normalize devicetree filename
 for dtb in $1/*.dtb; do
   if [ "$(basename "$dtb")" != 'devicetree.dtb' ]; then
