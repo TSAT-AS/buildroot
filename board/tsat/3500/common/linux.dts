@@ -105,48 +105,48 @@
 		partition@0 {
 			label = "boot";
 			reg = <0x0 0x500000>;
-      read-only;
+			read-only;
 		};
-    partition@500000 {
-      label = "boot-script";
-      reg = <0x500000 0x40000>;
-      read-only;
-    };
-    partition@540000 {
-      label = "boot-env";
-      reg = <0x540000 0x80000>;
-    };
-    partition@5C0000 {
-      label = "kernel-a";
-      reg = <0x5C0000 0xF80000>;
-    };
-    partition@A00000 {
-      label = "devicetree-a";
-      reg = <0xA00000 0x40000>;
-    };
-    partition@A40000 {
-      label = "rootfs-a";
-      reg = <0xA40000 0xB00000>;
-    };
-		partition@1540000 {
+		partition@500000 {
+			label = "boot-script";
+			reg = <0x500000 0x40000>;
+			read-only;
+		};
+		partition@540000 {
+			label = "boot-env";
+			reg = <0x540000 0xC0000>;
+		};
+		partition@600000 {
+			label = "kernel-a";
+			reg = <0x600000 0xF80000>;
+		};
+		partition@A40000 {
+			label = "devicetree-a";
+			reg = <0xA40000 0x40000>;
+		};
+		partition@A80000 {
+			label = "rootfs-a";
+			reg = <0xA80000 0xB00000>;
+		};
+		partition@1580000 {
 			label = "kernel-b";
-			reg = <0x1540000 0xF80000>;
-		};
-		partition@1980000 {
-			label = "devicetree-b";
-			reg = <0x1980000 0x40000>;
+			reg = <0x1580000 0xF80000>;
 		};
 		partition@19C0000 {
+			label = "devicetree-b";
+			reg = <0x19C0000 0x40000>;
+		};
+		partition@1A00000 {
 			label = "rootfs-b";
-			reg = <0x19C0000 0xB00000>;
+			reg = <0x1A00000 0xB00000>;
 		};
-		partition@24C0000 {
+		partition@2500000 {
 			label = "rootfs-data";
-			reg = <0x24C0000 0x140000>;
+			reg = <0x2500000 0x140000>;
 		};
-		partition@2600000 {
+		partition@2640000 {
 			label = "appfs";
-			reg = <0x2600000 0x1A00000>;
+			reg = <0x2640000 0x19C0000>;
 		};
 	};
 };
