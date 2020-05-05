@@ -2,7 +2,7 @@ the_ROM_image:
 {
 	[bootloader]fsbl.elf
 	fpga.bit
-	u-boot
+       u-boot.elf
 	[offset=0x500000]boot.scr
 	[offset=0x540000]uboot-env.bin
 	[offset=0x5C0000]uImage.bin
