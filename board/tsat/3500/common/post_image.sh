@@ -42,7 +42,7 @@ BOOT_IMG='boot.bin'
 echo "Creating boot image: $1/$BOOT_IMG"
 
 cd -- "$1"
-mkbootimage boot.bif "$BOOT_IMG"
+bootgen -image boot.bif -arch zynq -o "$BOOT_IMG" -w on -log info
 
 # create terminal and fpga SWUs
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
