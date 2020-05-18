@@ -12,29 +12,48 @@
 / {
 	model = "Enclustra Mars ZX3 SOM";
 	compatible = "xlnx,zynq-7000";
-
 	aliases {
-		eeprom0 = &eeprom;
+		eeprom0 = &eeprom_mb;
+		eeprom1 = &eeprom_db;
 		ethernet0 = &gem0;
 		ethernet1 = &gem1;
 		mmc0 = &sdhci0;
 		serial0 = &uart0;
 		spi0 = &qspi;
-		usb0 = &usb0;
 		gpio0 = &gpio0;
 		gpio1 = &tca6416_led;
 		gpio2 = &tca6416_gpio;
 		i2c0 = &i2c0;
 		i2c1 = &i2c1;
 	};
-
 	chosen {
 		stdout-path = &uart0;
 	};
-
 	memory {
 		device_type = "memory";
 		reg = <0 0x20000000>;
+	};
+	mdio@e000b000 {
+		compatible = "cdns,macb-mdio";
+		reg = <0xe000b000 0x1000>;
+		clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
+		clock-names = "pclk", "hclk", "tx_clk";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		phy3: ethernet-phy@3 {
+			reg = <3>;
+		};
+	};
+	mdio1@e000c000 {
+		compatible = "cdns,macb-mdio";
+		reg = <0xe000c000 0x1000>;
+		clocks = <&clkc 31>, <&clkc 31>;
+		clock-names = "pclk", "hclk";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		phy7: ethernet-phy@7 {
+			reg = <7>;
+		};
 	};
 };
 
@@ -65,9 +84,11 @@
 		reg = <3>;
 	};
 };
-
-&usb0 {
-	status = "okay";
+&gem1 {
+  status = "okay";
+  phy-mode = "mii-id";
+  phy-handle = <&phy7>;
+  xlnx,emio = <1>;
 };
 
 &i2c0 {
@@ -79,44 +100,154 @@
 };
 
 &i2c1 {
-	status = "okay";
-
-	tca6416_led: gpio@20 {
-		compatible = "ti,tca6416";
-		reg = <0x20>;
-		gpio-controller;
-		#gpio-cells = <2>;
-	};
-
-	tca6416_gpio: gpio@21 {
-		compatible = "ti,tca6416";
-		reg = <0x21>;
-		gpio-controller;
-		#gpio-cells = <2>;
-	};
-
-	ina226_rx: ina226rx@40 {
-		compatible = "ti,ina226";
-		reg = <0x40>;
-		shunt-resistor = <40000>;
-	};
-
-	ina226_tx: ina226tx@41 {
-		compatible = "ti,ina226";
-		reg = <0x41>;
-		shunt-resistor = <10000>;
-	};
-
-	eeprom: eeprom@50 {
-		compatible = "atmel,24c04";
-		reg = <0x50>;
-	};
-
-	adrf6755: adrf6755@60 {
-		status = "okay";
-		compatible = "adrf6755";
-		reg = <0x60>;
-		ref_frequency_KHz = <0x2710>;
-		pfd_frequency_KHz = <0x4e20>;
-	};
+  status = "okay";
+  tca6416_led: gpio@20 {
+    compatible = "ti,tca6416";
+    reg = <0x20>;
+    gpio-controller;
+    #gpio-cells = <2>;
+    P0 {
+      gpio-hog;
+      gpios = <0 0>;
+      output-low;
+      line-name = "DEBUG-P0";
+    };
+    P1 {
+      gpio-hog;
+      gpios = <1 0>;
+      output-low;
+      line-name = "DEBUG-P1";
+    };
+    P2 {
+      gpio-hog;
+      gpios = <2 0>;
+      output-low;
+      line-name = "DX232_2";
+    };
+    P3 {
+      gpio-hog;
+      gpios = <3 0>;
+      output-low;
+      line-name = "RX232_2n";
+    };
+    P4 {
+      gpio-hog;
+      gpios = <4 0>;
+      output-low;
+      line-name = "TX_ATTn";
+    };
+    P5 {
+      gpio-hog;
+      gpios = <5 0>;
+      output-low;
+      line-name = "RS232Main_ENn";
+    };
+    P6 {
+      gpio-hog;
+      gpios = <6 0>;
+      output-low;
+      line-name = "RS485_HDPLX";
+    };
+    P7 {
+      gpio-hog;
+      gpios = <7 0>;
+      output-low;
+      line-name = "RS485_TERM_EN";
+    };
+    P10 {
+      gpio-hog;
+      gpios = <8 0>;
+      output-low;
+      line-name = "RX485_2n";
+    };
+    P11 {
+      gpio-hog;
+      gpios = <9 0>;
+      output-low;
+      line-name = "DX485_2";
+    };
+    P12 {
+      gpio-hog;
+      gpios = <10 0>;
+      output-low;
+      line-name = "RX485_1n";
+    };
+    P13 {
+      gpio-hog;
+      gpios = <11 0>;
+      output-low;
+      line-name = "DX485_1";
+    };
+    P14 {
+      gpio-hog;
+      gpios = <12 0>;
+      output-low;
+      line-name = "DX232_1";
+    };
+    P15 {
+      gpio-hog;
+      gpios = <13 0>;
+      output-low;
+      line-name = "RX232_1n";
+    };
+    P16 {
+      gpio-hog;
+      gpios = <14 0>;
+      output-low;
+      line-name = "LNB_10M_OFF";
+    };
+    /* RESET PIN
+    P17 {
+      gpio-hog;
+      gpios = <15 0>;
+      output-low;
+      line-name = "RS232Main_ENn-P4";
+    };*/
+  };
+  tca6416_gpio: gpio@21 {
+    compatible = "ti,tca6416";
+    reg = <0x21>;
+    gpio-controller;
+    #gpio-cells = <2>;
+  };
+  ina226_rx: ina226rx@40 {
+    compatible = "ti,ina226";
+    reg = <0x40>;
+    shunt-resistor = <40000>;
+  };
+  ina226_tx: ina226tx@41 {
+    compatible = "ti,ina226";
+    reg = <0x41>;
+    shunt-resistor = <10000>;
+  };
+  eeprom_mb: eeprom@50 {
+    compatible = "atmel,24c04";
+    reg = <0x50>;
+  };
+  eeprom_db: eeprom@52 {
+    compatible = "atmel,24c04";
+    reg = <0x52>;
+  };
+/*
+  adrf6755: adrf6755@60 {
+    status = "okay";
+    compatible = "adrf6755";
+    reg = <0x60>;
+    ref_frequency_KHz = <0x2710>;
+    pfd_frequency_KHz = <0x4e20>;
+  };
+ For Bastien:
+  tps65233: tps65233@61 {
+    status = "okay";
+    compatible = "adrf6755";
+  };
+*/
+  emc1403_mb: emc1403@4c {
+    compatible = "smsc,emc1403";
+    reg = <0x3c>;
+  };
+  emc1403_txbox: emc1403@4c {
+    compatible = "smsc,emc1403";
+    reg = <0x4c>;
+  };
 };
