@@ -391,12 +391,15 @@
     ref_frequency_KHz = <0x2710>;
     pfd_frequency_KHz = <0x4e20>;
   };
-/* For Bastien:  
   tps65233: tps65233@61 {
     status = "okay";
-    compatible = "adrf6755";
+    compatible = "tps65233";
+    reg = <0x61>;
+    out_voltage = <0x6>;
+    current_limit_source = <0x1>;
+    tone_source = <0x1>;
+    tone_position = <0x1>;
   };
-*/
   emc1403_mb: emc1403@4c {
     compatible = "smsc,emc1403";
     reg = <0x3c>;
