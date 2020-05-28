@@ -1,11 +1,11 @@
 --- a/Makefile	2020-02-21 18:22:02.000000000 +0100
 +++ b/Makefile	2020-04-14 21:18:59.927997646 +0200
-@@ -100,7 +100,7 @@
- 
+@@ -72,7 +72,7 @@
+
  # compile all object files
  %.${OBJ} : %.cpp
--	${CROSS_COMPILER} -c ${CXXFLAGS} $(OPTIONS) ${INCLUDE} $<
-+	${CROSS_COMPILER} -c ${INCLUDE} ${CXXFLAGS} $(OPTIONS) $<
- 
+-	${CXX} -c ${CXXFLAGS} $(OPTIONS) ${INCLUDE} $<
++	${CXX} -c ${INCLUDE} ${CXXFLAGS} $(OPTIONS) $<
+
  ${EXEC}: $(OBJECTS)
  	echo Building executable file: $@...
