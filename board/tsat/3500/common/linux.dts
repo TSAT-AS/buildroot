@@ -83,6 +83,18 @@
     interrupt-parent = <0x4>;
     interrupts = <0x0 0x1e 0x1>;
   };
+  reset_interrupt@44000000 {
+    compatible = "generic-uio";
+    reg = <0x44000000 0x1000>;
+    interrupt-parent = <0x4>;
+    interrupts = <0x0 0x1f 0x1>;
+  };
+  ftdi_interrupt@44000000 {
+    compatible = "generic-uio";
+    reg = <0x44000000 0x1000>;
+    interrupt-parent = <0x4>;
+    interrupts = <0x0 0x20 0x1>;
+  };
   gpio-leds {
     compatible = "gpio-leds";
     led0 {
@@ -262,103 +274,6 @@
     reg = <0x20>;
     gpio-controller;
     #gpio-cells = <2>;
-    P0 {
-      gpio-hog;
-      gpios = <0 0>;
-      output-low;
-      line-name = "DEBUG-P0";
-    };
-    P1 {
-      gpio-hog;
-      gpios = <1 0>;
-      output-low;
-      line-name = "DEBUG-P1";
-    };
-    P2 {
-      gpio-hog;
-      gpios = <2 0>;
-      output-low;
-      line-name = "DX232_2";
-    };
-    P3 {
-      gpio-hog;
-      gpios = <3 0>;
-      output-low;
-      line-name = "RX232_2n";
-    };
-    P4 {
-      gpio-hog;
-      gpios = <4 0>;
-      output-low;
-      line-name = "TX_ATTn";
-    };
-    P5 {
-      gpio-hog;
-      gpios = <5 0>;
-      output-low;
-      line-name = "RS232Main_ENn";
-    };
-    P6 {
-      gpio-hog;
-      gpios = <6 0>;
-      output-low;
-      line-name = "RS485_HDPLX";
-    };
-    P7 {
-      gpio-hog;
-      gpios = <7 0>;
-      output-low;
-      line-name = "RS485_TERM_EN";
-    };
-    P10 {
-      gpio-hog;
-      gpios = <8 0>;
-      output-low;
-      line-name = "RX485_2n";
-    };
-    P11 {
-      gpio-hog;
-      gpios = <9 0>;
-      output-low;
-      line-name = "DX485_2";
-    };
-    P12 {
-      gpio-hog;
-      gpios = <10 0>;
-      output-low;
-      line-name = "RX485_1n";
-    };
-    P13 {
-      gpio-hog;
-      gpios = <11 0>;
-      output-low;
-      line-name = "DX485_1";
-    };
-    P14 {
-      gpio-hog;
-      gpios = <12 0>;
-      output-low;
-      line-name = "DX232_1";
-    };
-    P15 {
-      gpio-hog;
-      gpios = <13 0>;
-      output-low;
-      line-name = "RX232_1n";
-    };
-    P16 {
-      gpio-hog;
-      gpios = <14 0>;
-      output-low;
-      line-name = "LNB_10M_OFF";
-    };
-    /* RESET PIN
-    P17 {
-      gpio-hog;
-      gpios = <15 0>;
-      output-low;
-      line-name = "RS232Main_ENn-P4";
-    };*/
   };
   tca6416_gpio: gpio@21 {
     compatible = "ti,tca6416";
@@ -391,12 +306,15 @@
     ref_frequency_KHz = <0x2710>;
     pfd_frequency_KHz = <0x4e20>;
   };
-/* For Bastien:  
   tps65233: tps65233@61 {
     status = "okay";
-    compatible = "adrf6755";
+    compatible = "tps65233";
+    reg = <0x61>;
+    out_voltage = <0x6>;
+    current_limit_source = <0x1>;
+    tone_source = <0x1>;
+    tone_position = <0x1>;
   };
-*/
   emc1403_mb: emc1403@4c {
     compatible = "smsc,emc1403";
     reg = <0x3c>;
