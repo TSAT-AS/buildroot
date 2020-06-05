@@ -1,0 +1,6 @@
+config BR2_PACKAGE_TPS65233
+	bool "tps65233"
+	default y
+	depends on BR2_LINUX_KERNEL
+	help
+	  TPS65233 LNB kernel module
