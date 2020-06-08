@@ -48,6 +48,7 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 
 # run terminal scripts
 ::sysinit:/usr/local/bin/load_ko.sh /lib/modules/4.14.0-xilinx/extra/adrf6755.ko
+::sysinit:/usr/local/bin/load_ko.sh /lib/modules/4.14.0-xilinx/extra/tps65233.ko
 ttyPS0::respawn:/usr/local/bin/load_terminal.sh
 
 # Put a getty on the serial port
