@@ -16,7 +16,7 @@ FULL_IMG='qspi.img'
 echo "Creating full QSPI image: $1/$FULL_IMG"
 
 cd -- "$1"
-bootgen -image full.bif -arch zynq -o "$FULL_IMG" -w on -log info
+bootgen -image full.bif -arch zynq -o "$FULL_IMG" -efuseppkbits hash_ppk.txt -w on -log info
 
 # generate qspi swu packages
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"

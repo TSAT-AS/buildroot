@@ -1,6 +1,8 @@
 the_ROM_image:
 {
-	[bootloader]fsbl.elf
-	fpga.bit
-	u-boot.elf
+	[pskfile] psk.pem
+	[sskfile] ssk.pem
+	[bootloader, authentication=rsa] fsbl.elf
+	[authentication=rsa] fpga.bit
+	[authentication=rsa] u-boot.elf
 }
