@@ -8,12 +8,6 @@ if [ -f "$UBOOT" ]; then
   mv -v -- "$UBOOT" "$UBOOT.elf"
 fi
 
-# normalize devicetree filename
-LINUX_DEV_TREE="$1/linux.dtb"
-if [ -f "$LINUX_DEV_TREE" ]; then
-    mv -v -- "$LINUX_DEV_TREE" "$1/devicetree.dtb"
-fi
-
 # populate appfs directory
 APPFS_DIR="$1/appfs"
 APPFS_FPGA_DIR="$APPFS_DIR/fpga"

@@ -24,7 +24,7 @@
 		};
 		fdt-1 {
 			description = "default device tree";
-			data = /incbin/("./devicetree.dtb");
+			data = /incbin/("./linux.dtb");
 			type = "flat_dt";
 			arch = "arm";
 			compression = "none";
