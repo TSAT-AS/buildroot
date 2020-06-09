@@ -120,10 +120,6 @@
 			label = "kernel-a";
 			reg = <0x600000 0xF80000>;
 		};
-		partition@A40000 {
-			label = "devicetree-a";
-			reg = <0xA40000 0x40000>;
-		};
 		partition@A80000 {
 			label = "rootfs-a";
 			reg = <0xA80000 0xB00000>;
@@ -131,10 +127,6 @@
 		partition@1580000 {
 			label = "kernel-b";
 			reg = <0x1580000 0xF80000>;
-		};
-		partition@19C0000 {
-			label = "devicetree-b";
-			reg = <0x19C0000 0x40000>;
 		};
 		partition@1A00000 {
 			label = "rootfs-b";

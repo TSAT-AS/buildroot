@@ -8,12 +8,6 @@ if [ -f "$UBOOT" ]; then
   mv -v -- "$UBOOT" "$UBOOT.elf"
 fi
 
-# normalize Linux kernel filename (for bootgen)
-KERNEL="$1/uImage"
-if [ -f "$KERNEL" ]; then
-  mv -v -- "$KERNEL" "$KERNEL.bin"
-fi
-
 # normalize devicetree filename
 LINUX_DEV_TREE="$1/linux.dtb"
 if [ -f "$LINUX_DEV_TREE" ]; then
@@ -31,6 +25,11 @@ tar -x --no-same-owner -v -f "$1/fpga.tar.gz" -C "$APPFS_FPGA_DIR"
 tar -x --no-same-owner -v -f "$1/terminal.tar.gz" -C "$APPFS_TERM_DIR"
 ln -snf "$(basename "$APPFS_FPGA_DIR")/fpga_viterbi_low.bit" "$APPFS_DIR/fpga.bit"
 ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
+
+# build signed FIT image
+cp -v -- board/tsat/3500/common/images/kernel-dtb.its "$1"
+mkimage -f "$1/kernel-dtb.its" "$1/kernel-dtb.itb"
+mkimage -F "$1/kernel-dtb.itb" -k "$1/keys" -K "$1/u-boot.dtb" -c "Signed by build system" -r
 
 # build boot image
 cp -- board/tsat/3500/common/images/boot.bif "$1"

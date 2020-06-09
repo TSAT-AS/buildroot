@@ -11,4 +11,4 @@ sysfs       /sys        sysfs   defaults,noauto 0 0
 tmpfs       /lib/firmware tmpfs   defaults 0 0
 
 # appfs
-mtd10       /root         jffs2   defaults 0 0
+mtd8        /root       jffs2   defaults 0 0

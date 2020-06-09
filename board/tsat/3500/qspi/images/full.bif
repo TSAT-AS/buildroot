@@ -8,8 +8,7 @@ the_ROM_image:
 	[authentication=rsa, offset=0x490000, load=0x2000000] u-boot.dtb
 	[offset=0x4C0000] boot.scr
 	[offset=0x500000] uboot-env.bin
-	[offset=0x5C0000] uImage.bin
-	[offset=0xA00000] devicetree.dtb
+	[offset=0x5C0000] kernel-dtb.itb
 	[offset=0xA40000] rootfs.squashfs
 	[offset=0x2600000] appfs.jffs2
 }

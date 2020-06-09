@@ -6,17 +6,14 @@ i2c mw 20 7 0
 if test ${tsat_firmware_selector} = A; then
   echo "(${tsat_firmware_selector}) => use firmware A"
   setenv koff  ${tsat_qspi_kernel_offset_a}
-  setenv doff  ${tsat_qspi_devicetree_offset_a}
   setenv rpart ${tsat_qspi_rootfs_partition_a}
 else
   echo "(${tsat_firmware_selector}) => use firmware B"
   setenv koff  ${tsat_qspi_kernel_offset_b}
-  setenv doff  ${tsat_qspi_devicetree_offset_b}
   setenv rpart ${tsat_qspi_rootfs_partition_b}
 fi
 
 sf read ${tsat_kernel_loadaddr} ${koff} ${tsat_qspi_kernel_size};
-sf read ${tsat_devicetree_loadaddr} ${doff} ${tsat_qspi_devicetree_size};
 
 setenv bootargs ${tsat_def_args} root=/dev/${rpart} rootfstype=squashfs rootwait copy=${tsat_firmware_selector}
-bootm ${tsat_kernel_loadaddr} - ${tsat_devicetree_loadaddr}
+bootm ${tsat_kernel_loadaddr}

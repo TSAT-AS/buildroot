@@ -42,7 +42,7 @@ index b780156f..0bc29db7 100644
                                                  \
      "emmcboot="                                 \
          "setenv mmcdev 1;"                      \
-@@ -191,5 +193,42 @@
+@@ -191,5 +193,39 @@
          "fdt set " QSPI_STRING "@qspi-device-tree reg <${qspi_devicetree_offset} ${devicetree_size}>; " \
          "fdt set " QSPI_STRING "@qspi-bootargs reg <${qspi_env_offset} ${qspi_env_size}>; " \
          "fdt set " QSPI_STRING "@qspi-bootscript reg <${qspi_bootscript_offset} ${bootscript_size}>; " \
@@ -73,11 +73,8 @@ index b780156f..0bc29db7 100644
 +    "tsat_qspi_kernel_offset_a=0x0600000\0"         \
 +    "tsat_qspi_kernel_offset_b=0x1580000\0"         \
 +    "tsat_qspi_kernel_size=0x440000\0"              \
-+    "tsat_qspi_devicetree_offset_a=0x0A40000\0"     \
-+    "tsat_qspi_devicetree_offset_b=0x19C0000\0"     \
-+    "tsat_qspi_devicetree_size=0x40000\0"           \
-+    "tsat_qspi_rootfs_partition_a=mtdblock5\0"      \
-+    "tsat_qspi_rootfs_partition_b=mtdblock8\0"      \
++    "tsat_qspi_rootfs_partition_a=mtdblock4\0"      \
++    "tsat_qspi_rootfs_partition_b=mtdblock6\0"      \
 +                                                    \
 +    "tsat_qspiboot=echo Bootinq on QSPI Flash ...; "\
 +        "zx_set_storage QSPI && "                   \
