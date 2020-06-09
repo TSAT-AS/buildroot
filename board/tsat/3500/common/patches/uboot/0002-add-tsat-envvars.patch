@@ -42,7 +42,7 @@ index b780156f..0bc29db7 100644
                                                  \
      "emmcboot="                                 \
          "setenv mmcdev 1;"                      \
-@@ -191,5 +193,41 @@
+@@ -191,5 +193,42 @@
          "fdt set " QSPI_STRING "@qspi-device-tree reg <${qspi_devicetree_offset} ${devicetree_size}>; " \
          "fdt set " QSPI_STRING "@qspi-bootargs reg <${qspi_env_offset} ${qspi_env_size}>; " \
          "fdt set " QSPI_STRING "@qspi-bootscript reg <${qspi_bootscript_offset} ${bootscript_size}>; " \
@@ -84,4 +84,5 @@ index b780156f..0bc29db7 100644
 +        "sf probe && "                              \
 +        "sf read ${tsat_bootscript_loadaddr} ${tsat_qspi_bootscript_offset} ${tsat_qspi_bootscript_size} && "\
 +        "source ${tsat_bootscript_loadaddr}\0"
++    "fdtcontroladdr=0x2000000\0"
  #endif

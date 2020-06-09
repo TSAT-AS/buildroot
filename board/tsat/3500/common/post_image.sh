@@ -15,11 +15,10 @@ if [ -f "$KERNEL" ]; then
 fi
 
 # normalize devicetree filename
-for dtb in $1/*.dtb; do
-  if [ "$(basename "$dtb")" != 'devicetree.dtb' ]; then
-    mv -v -- "$dtb" "$1/devicetree.dtb"
-  fi
-done
+LINUX_DEV_TREE="$1/linux.dtb"
+if [ -f "$LINUX_DEV_TREE" ]; then
+    mv -v -- "$LINUX_DEV_TREE" "$1/devicetree.dtb"
+fi
 
 # populate appfs directory
 APPFS_DIR="$1/appfs"

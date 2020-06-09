@@ -5,4 +5,5 @@ the_ROM_image:
 	[bootloader, authentication=rsa] fsbl.elf
 	[authentication=rsa] fpga.bit
 	[authentication=rsa] u-boot.elf
+	[authentication=rsa, offset=0x490000, load=0x2000000] u-boot.dtb
 }
