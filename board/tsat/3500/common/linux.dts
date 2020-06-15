@@ -315,7 +315,7 @@
     tone_source = <0x1>;
     tone_position = <0x1>;
   };
-  emc1403_mb: emc1403@4c {
+  emc1403_mb: emc1403@3c {
     compatible = "smsc,emc1403";
     reg = <0x3c>;
   };
