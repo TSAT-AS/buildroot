@@ -70,8 +70,8 @@ index 0000000..8b221db
 +    "tsat_qspi_bootscript_offset=0x0500000\0"       \
 +    "tsat_qspi_bootscript_size=0x40000\0"           \
 +    "tsat_qspi_kernel_offset_a=0x0600000\0"         \
-+    "tsat_qspi_kernel_offset_b=0x1580000\0"         \
-+    "tsat_qspi_kernel_size=0x440000\0"              \
++    "tsat_qspi_kernel_offset_b=0x1700000\0"         \
++    "tsat_qspi_kernel_size=0x600000\0"              \
 +    "tsat_qspi_rootfs_partition_a=mtdblock4\0"      \
 +    "tsat_qspi_rootfs_partition_b=mtdblock6\0"      \
 +                                                    \

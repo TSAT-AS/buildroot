@@ -22,6 +22,21 @@
 				algo = "sha1";
 			};
 		};
+
+		ramdisk-1 {
+			description = "rootfs";
+			data = /incbin/("./initramfs.cpio.xz");
+			type = "ramdisk";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			load = <00000000>;
+			entry = <00000000>;
+			hash-1 {
+				algo = "sha1";
+			};
+		};
+
 		fdt-1 {
 			description = "default device tree";
 			data = /incbin/("./linux.dtb");
@@ -39,11 +54,12 @@
 		conf-1 {
 			description = "default configuration";
 			kernel = "kernel-1";
+			ramdisk = "ramdisk-1";
 			fdt = "fdt-1";
 			signature-1 {
 				algo = "sha1,rsa2048";
 				key-name-hint = "dev";
-				sign-images = "fdt", "kernel";
+				sign-images = "fdt", "kernel", "ramdisk";
 			};
 		};
 	};

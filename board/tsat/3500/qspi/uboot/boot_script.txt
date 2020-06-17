@@ -15,5 +15,5 @@ fi
 
 sf read ${tsat_kernel_loadaddr} ${koff} ${tsat_qspi_kernel_size};
 
-setenv bootargs ${tsat_def_args} root=/dev/${rpart} rootfstype=squashfs rootwait copy=${tsat_firmware_selector}
+setenv bootargs ${tsat_def_args} rootfsdev=/dev/${rpart} rootwait copy=${tsat_firmware_selector}
 bootm ${tsat_kernel_loadaddr}
