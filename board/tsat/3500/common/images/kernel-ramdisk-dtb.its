@@ -23,20 +23,6 @@
 			};
 		};
 
-		ramdisk-1 {
-			description = "rootfs";
-			data = /incbin/("./initramfs.cpio.xz");
-			type = "ramdisk";
-			arch = "arm";
-			os = "linux";
-			compression = "none";
-			load = <00000000>;
-			entry = <00000000>;
-			hash-1 {
-				algo = "sha1";
-			};
-		};
-
 		fdt-1 {
 			description = "default device tree";
 			data = /incbin/("./linux.dtb");
@@ -59,7 +45,7 @@
 			signature-1 {
 				algo = "sha1,rsa2048";
 				key-name-hint = "dev";
-				sign-images = "fdt", "kernel", "ramdisk";
+				sign-images = "fdt", "kernel";
 			};
 		};
 	};

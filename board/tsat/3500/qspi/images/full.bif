@@ -10,6 +10,6 @@ the_ROM_image:
 	[authentication=rsa, offset=0x4C0000, partition_owner=uboot] u-boot-script.itb
 	[offset=0x500000] uboot-env.bin
 	[offset=0x5C0000] kernel-ramdisk-dtb.itb
-	[offset=0xBC0000] rootfs.squashfs
-	[offset=0x2900000] appfs.jffs2
+	[offset=0x11C0000] kernel-ramdisk-dtb.itb
+	[offset=0x1F00000] appfs.jffs2
 }

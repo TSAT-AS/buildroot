@@ -19,12 +19,12 @@
 
 # Startup the system
 ::sysinit:/bin/mount -t proc proc /proc
-::sysinit:/bin/mount -o remount,rw /
+::sysinit:/bin/mount -r -o remount /
 ::sysinit:/bin/mkdir -p /dev/pts
 ::sysinit:/bin/mkdir -p /dev/shm
 
 # Mount and configure overlayfs
-::sysinit:/bin/mount -t jffs2 /dev/mtdblock7 /overlay
+::sysinit:/bin/mount -t jffs2 /dev/mtdblock5 /overlay
 ::sysinit:/bin/mkdir -p /overlay/etc
 ::sysinit:/bin/mkdir -p /overlay/work
 ::sysinit:/bin/mount -t overlay overlay -o lowerdir=/etc,upperdir=/overlay/etc,workdir=/overlay/work /etc

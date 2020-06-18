@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..8b221db
 --- /dev/null
 +++ b/include/configs/tsat_3500.h
-@@ -0,0 +1,80 @@
+@@ -0,0 +1,78 @@
 +/*
 + * (C) Copyright 2013 Xilinx, Inc.
 + * (C) Copyright 2015 Antmicro Ltd
@@ -70,10 +70,8 @@ index 0000000..8b221db
 +    "tsat_qspi_bootscript_offset=0x0500000\0"       \
 +    "tsat_qspi_bootscript_size=0x40000\0"           \
 +    "tsat_qspi_kernel_offset_a=0x0600000\0"         \
-+    "tsat_qspi_kernel_offset_b=0x1700000\0"         \
-+    "tsat_qspi_kernel_size=0x600000\0"              \
-+    "tsat_qspi_rootfs_partition_a=mtdblock4\0"      \
-+    "tsat_qspi_rootfs_partition_b=mtdblock6\0"      \
++    "tsat_qspi_kernel_offset_b=0x1200000\0"         \
++    "tsat_qspi_kernel_size=0xC00000\0"              \
 +                                                    \
 +    "tsat_qspiboot=echo Bootinq on QSPI Flash ...; "\
 +        "zx_set_storage QSPI && "                   \
