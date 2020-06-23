@@ -6,7 +6,7 @@
 
 HOST_MKSWU_SITE_METHOD = git
 HOST_MKSWU_SITE = ssh://git@dev.tsat.net:7999/tsat3k/image-builder.git
-HOST_MKSWU_VERSION = a043cfc0805823f3cf3286657b366e46a5c63b04
+HOST_MKSWU_VERSION = 87df8acde810b2161d294dc1b8216fc4de0b407b
 HOST_MKSWU_DEPENDENCIES = host-openssl host-cpio
 
 define HOST_MKSWU_INSTALL_CMDS
@@ -14,6 +14,7 @@ define HOST_MKSWU_INSTALL_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/targets/fpga/postinstall.sh       $(HOST_DIR)/usr/share/mkswu/fpga-postinstall.sh
 	$(INSTALL) -m 0644 -D $(@D)/targets/terminal/postinstall.sh   $(HOST_DIR)/usr/share/mkswu/terminal-postinstall.sh
 	$(INSTALL) -m 0644 -D $(@D)/targets/mmc-system/postinstall.sh $(HOST_DIR)/usr/share/mkswu/mmc-system-postinstall.sh
+	$(INSTALL) -m 0644 -D $(@D)/targets/qspi-system/postinstall.sh $(HOST_DIR)/usr/share/mkswu/qspi-system-postinstall.sh
 
 	$(INSTALL) -m 0755 -D $(@D)/targets/fpga/mkswu.sh             $(HOST_DIR)/bin/mkswu-fpga
 	$(INSTALL) -m 0755 -D $(@D)/targets/terminal/mkswu.sh         $(HOST_DIR)/bin/mkswu-terminal

@@ -29,5 +29,6 @@ bootgen -image full.bif -arch zynq -o "$FULL_IMG" -efuseppkbits hash_ppk.txt -p 
 
 # generate qspi swu packages
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
+export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/qspi-system-postinstall.sh"
 $HOST_DIR/bin/mkswu-qspi-system 'kernel-ramdisk-dtb.itb'
 $HOST_DIR/bin/mkswu-qspi-full 'qspi-system.swu' 'terminal.swu' 'fpga.swu'
