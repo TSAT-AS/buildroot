@@ -14,6 +14,10 @@ cp -v -- board/tsat/3500/common/images/u-boot-script.its "$1"
 cp -v -- board/tsat/3500/qspi/uboot/boot_script.txt "$1"
 mkimage -f "$1/u-boot-script.its" "$1/u-boot-script.itb"
 
+# create default boot-selector and boot-count
+echo -en "\xaa" > "$1/default_selector.bin"
+echo -en "\x00" > "$1/default_count.bin"
+
 # generate qspi full image
 cp -- board/tsat/3500/qspi/images/full.bif "$1"
 

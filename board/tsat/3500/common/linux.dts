@@ -113,11 +113,11 @@
 			read-only;
 		};
 		partition@540000 {
-			label = "l1-boot-flag";
+			label = "boot-selector";
 			reg = <0x540000 0x40000>;
 		};
 		partition@580000 {
-			label = "l2-boot-flag";
+			label = "boot-count";
 			reg = <0x580000 0x40000>;
 		};
 		partition@600000 {
