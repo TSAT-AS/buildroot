@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..8b221db
 --- /dev/null
 +++ b/include/configs/tsat_3500.h
-@@ -0,0 +1,78 @@
+@@ -0,0 +1,77 @@
 +/*
 + * (C) Copyright 2013 Xilinx, Inc.
 + * (C) Copyright 2015 Antmicro Ltd
@@ -75,7 +75,6 @@ index 0000000..8b221db
 +                                                    \
 +    "tsat_qspiboot=echo Bootinq on QSPI Flash ...; "\
 +        "zx_set_storage QSPI && "                   \
-+        "sf probe && "                              \
 +        "sf read ${tsat_bootscript_loadaddr} ${tsat_qspi_bootscript_offset} ${tsat_qspi_bootscript_size} && "\
 +        "source ${tsat_bootscript_loadaddr}:script-1\0"\
 +    "fdtcontroladdr=0x2000000\0"                    \
