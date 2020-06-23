@@ -3,15 +3,45 @@ i2c dev 1
 i2c mw 20 6 0
 i2c mw 20 7 0
 
-if test ${tsat_firmware_selector} = A; then
-  echo "(${tsat_firmware_selector}) => use firmware A"
-  setenv koff  ${tsat_qspi_kernel_offset_a}
+# define boot selector constants
+setenv boot_selector_a_value 0xaa
+setenv boot_selector_a_addr 0x1000000
+mw.b ${boot_selector_a_addr} ${boot_selector_a_value} 1
+setenv boot_selector_b_value 0xbb
+setenv boot_selector_b_addr 0x1000001
+mw.b ${boot_selector_b_addr} ${boot_selector_b_value} 1
+
+# read and clear L1 flag
+setenv boot_selector_l1_offset 0x540000
+setenv boot_selector_l1_addr 0x2000000
+sf read ${boot_selector_l1_addr} ${boot_selector_l1_offset} 1
+sf erase ${boot_selector_l1_offset} +1
+
+if itest.b *${boot_selector_l1_addr} -eq ${boot_selector_a_value}; then
+  echo "UPGRADE => BOOT A"
+  setenv bootargs ${tsat_def_args} rootwait copy=A
+  sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_a} ${tsat_qspi_kernel_size} && bootm ${tsat_kernel_loadaddr}
+elif itest.b *${boot_selector_l1_addr} -eq ${boot_selector_b_value}; then
+  echo "UPGRADE => BOOT B"
+  setenv bootargs ${tsat_def_args} rootwait copy=B
+  sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_b} ${tsat_qspi_kernel_size} && bootm ${tsat_kernel_loadaddr}
 else
-  echo "(${tsat_firmware_selector}) => use firmware B"
-  setenv koff  ${tsat_qspi_kernel_offset_b}
+  echo "NO UPGRADE DETECTED"
 fi
 
-sf read ${tsat_kernel_loadaddr} ${koff} ${tsat_qspi_kernel_size};
+# read L2 flag
+setenv boot_selector_l2_offset 0x580000
+setenv boot_selector_l2_addr 0x2000001
+sf read ${boot_selector_l2_addr} ${boot_selector_l2_offset} 1
 
-setenv bootargs ${tsat_def_args} rootwait copy=${tsat_firmware_selector}
-bootm ${tsat_kernel_loadaddr}
+if itest.b *${boot_selector_l2_addr} -eq ${boot_selector_a_value}; then
+  echo "BOOT A"
+  sf write ${boot_selector_b_addr} ${boot_selector_l2_offset} 1
+  setenv bootargs ${tsat_def_args} rootwait copy=A
+  sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_a} ${tsat_qspi_kernel_size}&& bootm ${tsat_kernel_loadaddr}
+else
+  echo "BOOT B"
+  sf write ${boot_selector_a_addr} ${boot_selector_l2_offset} 1
+  setenv bootargs ${tsat_def_args} rootwait copy=B
+  sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_b} ${tsat_qspi_kernel_size} && bootm ${tsat_kernel_loadaddr}
+fi
