@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# boot count - check and reset boot count
+#
+BOOT_COUNT_DEV='/dev/mtdblock3'
+
+start() {
+	printf "Reading boot count..."
+	COUNT="$(xxd -p -l 1 -c 1 "$BOOT_COUNT_DEV")"
+	echo "bootcount='$COUNT'"
+
+	if [ "$COUNT" -eq 0 ]; then
+		echo "WARNING: boot count limit reached => booted other system copy"
+		touch /root/bootcount.error
+	else
+		printf "Reset bootcount..."
+		echo -en '\x00' > "$BOOT_COUNT_DEV"
+		echo "OK"
+	fi
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  *)
+	echo "Usage: $0 {start}"
+	exit 1
+esac
+
+exit $?
