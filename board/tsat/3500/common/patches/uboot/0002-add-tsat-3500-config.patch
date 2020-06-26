@@ -85,6 +85,6 @@ index 0000000..8b221db
 +        "sf read ${tsat_bootscript_loadaddr} ${tsat_qspi_bootscript_offset} ${tsat_qspi_bootscript_size} && "\
 +        "source ${tsat_bootscript_loadaddr}:script-1\0"\
 +    "fdtcontroladdr=0x2000000\0"                    \
-+    "tsat_rsa_verify=sf probe && sf read 0x100000 ${boot_image_offset} ${boot_image_size} && zynqrsa 0x100000\0"
++    "tsat_rsa_verify=sf probe && sf read 0x100000 ${boot_image_offset} ${boot_image_size} && zynq rsa 0x100000\0"
 +
 +#endif /* __CONFIG_TSAT_3500_H */
