@@ -19,9 +19,6 @@
 		i2c0 = &i2c0;
 		i2c1 = &i2c1;
 	};
-	chosen {
-		stdout-path = &uart0;
-	};
 	memory {
 		device_type = "memory";
 		reg = <0 0x20000000>;
