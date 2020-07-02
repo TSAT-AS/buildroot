@@ -269,6 +269,7 @@
 };
 &i2c1 {
   status = "okay";
+  clock-frequency = <0x30d40>;
   tca6416_led: gpio@20 {
     compatible = "ti,tca6416";
     reg = <0x20>;
