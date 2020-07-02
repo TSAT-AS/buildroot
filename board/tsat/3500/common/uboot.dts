@@ -19,6 +19,9 @@
 		i2c0 = &i2c0;
 		i2c1 = &i2c1;
 	};
+	chosen {
+		xlnx,eeprom = &eeprom_mb;
+	};
 	memory {
 		device_type = "memory";
 		reg = <0 0x20000000>;

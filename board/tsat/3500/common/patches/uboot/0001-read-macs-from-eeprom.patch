@@ -12,20 +12,6 @@ index e865b54b..54e2dc07 100644
  	}
  
  #if defined(CONFIG_ZYNQ_QSPI)
- diff --git a/board/xilinx/common/board.c b/board/xilinx/common/board.c
-index 5fdd994705..db46c034c9 100644
---- a/board/xilinx/common/board.c
-+++ b/board/xilinx/common/board.c
-@@ -14,7 +14,8 @@ int zynq_board_read_rom_ethaddr(unsigned char *ethaddr)
- {
- 	int ret = -EINVAL;
- 
--#if defined(CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET)
-+#if defined(CONFIG_ZYNQ_GEM_I2C_MAC_OFFSET) && \
-+    defined(CONFIG_ZYNQ_EEPROM_BUS)
- 	struct udevice *dev;
- 	ofnode eeprom;
-
 diff --git a/net/eth-uclass.c b/net/eth-uclass.c
 index c87e665416..3f278f1c64 100644
 --- a/net/eth-uclass.c
