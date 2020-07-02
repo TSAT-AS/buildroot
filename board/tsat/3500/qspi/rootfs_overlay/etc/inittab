@@ -52,9 +52,10 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 ::sysinit:/bin/echo 0 > /sys/class/leds/board:red:cpu/brightness
 ::sysinit:/bin/echo 255 > /sys/class/leds/board:green:cpu/brightness
 
-# run terminal scripts
-::sysinit:/usr/local/bin/load_ko.sh /lib/modules/4.14.0-xilinx/extra/adrf6755.ko
-::sysinit:/usr/local/bin/load_ko.sh /lib/modules/4.14.0-xilinx/extra/tps65233.ko
+# insert our kernel modules
+::sysinit:/usr/local/bin/load_kos.sh
+
+# start the satellite terminal software
 ttyPS0::respawn:/usr/local/bin/load_terminal.sh
 
 # Put a getty on the serial port
@@ -64,6 +65,20 @@ ttyPS0::respawn:/sbin/getty -L  ttyPS0 0 vt100 # GENERIC_SERIAL
 #::ctrlaltdel:/sbin/reboot
 
 # Stuff to do before rebooting
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:buc/brightness
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:cpu/brightness
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:lnb/brightness
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:lnk/brightness
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:loc/brightness
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:rx/brightness
+::shutdown:/bin/echo 0 > /sys/class/leds/board:green:tx/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:buc/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:cpu/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:lnb/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:lnk/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:loc/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:rx/brightness
+::shutdown:/bin/echo 255 > /sys/class/leds/board:red:tx/brightness
 ::shutdown:/etc/init.d/rcK
 ::shutdown:/sbin/swapoff -a
 ::shutdown:/bin/umount -a -r
