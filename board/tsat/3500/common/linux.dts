@@ -268,7 +268,6 @@
   };
 };
 &i2c1 {
-  clock-frequency = <200000>;
   status = "okay";
   clock-frequency = <0x30d40>;
   tca6416_led: gpio@20 {
