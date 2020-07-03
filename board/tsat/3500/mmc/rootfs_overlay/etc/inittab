@@ -46,9 +46,10 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 ::sysinit:/bin/echo 0 > /sys/class/leds/board:red:cpu/brightness
 ::sysinit:/bin/echo 255 > /sys/class/leds/board:green:cpu/brightness
 
-# run terminal scripts
-::sysinit:/usr/local/bin/load_ko.sh /lib/modules/4.14.0-xilinx/extra/adrf6755.ko
-::sysinit:/usr/local/bin/load_ko.sh /lib/modules/4.14.0-xilinx/extra/tps65233.ko
+# insert our kernel modules
+::sysinit:/usr/local/bin/load_kos.sh
+
+# start the satellite terminal software
 ttyPS0::respawn:/usr/local/bin/load_terminal.sh
 
 # Put a getty on the serial port
