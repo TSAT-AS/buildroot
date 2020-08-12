@@ -1,0 +1,11 @@
+stage3:
+{
+	[ppkfile] ppk.pem
+	[spkfile] spk.pem
+	[spksignature] spk.pem.sha256.sig
+	[bootimage, authentication=rsa] fsbl_e.bin
+	[bootimage, authentication=rsa] fpga_e.bin
+	[authentication=rsa] u-boot.elf
+	[authentication=rsa] u-boot.dtb
+	[authentication=rsa] u-boot-script.itb
+}
