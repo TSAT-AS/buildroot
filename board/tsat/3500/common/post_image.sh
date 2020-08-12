@@ -25,19 +25,12 @@ cp -v -- board/tsat/3500/common/images/kernel-ramdisk-dtb.its "$1"
 mkimage -f "$1/kernel-ramdisk-dtb.its" "$1/kernel-ramdisk-dtb.itb"
 mkimage -F "$1/kernel-ramdisk-dtb.itb" -k "$1/keys" -K "$1/u-boot.dtb" -c "Signed by build system" -r
 
-# build boot image
-cp -- board/tsat/3500/common/images/boot.bif "$1"
+# get files for boot image creation
 cp -- ../binaries/fsbl.elf "$1"
 cp -- ../binaries/fpga.bit "$1"
 
-BOOT_IMG='boot.bin'
-echo "Creating boot image: $1/$BOOT_IMG"
-
-cd -- "$1"
-bootgen -image boot.bif -arch zynq -o "$BOOT_IMG" -efuseppkbits hash_ppk.txt -p xc7z020 -encrypt efuse -w on -log info
-
-
 # create terminal and fpga SWUs
+cd -- "$1"
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
 export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/fpga-postinstall.sh"
 $HOST_DIR/bin/mkswu-fpga 'fpga.tar.gz'

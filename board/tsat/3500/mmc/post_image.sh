@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -9,6 +9,14 @@ APPFS_SIZE='256M'
 test -d "$APPFS_INPUT" || exit 1
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
 output/host/sbin/mkfs.ext4 -v -d "$APPFS_INPUT" -E 'root_owner=0:0,lazy_itable_init=0,lazy_journal_init=0' -L 'APP' -O '^64bit' "$APPFS_OUTPUT" "$APPFS_SIZE"
+
+# build boot image
+cp -- board/tsat/3500/common/images/boot.bif "$1"
+BOOT_IMG='boot.bin'
+echo "Creating boot image: $1/$BOOT_IMG"
+pushd "$1"
+bootgen -image boot.bif -arch zynq -o "$BOOT_IMG" -w on -log info
+popd
 
 # create boot-, env- and kernel filesystems
 support/scripts/genimage.sh -c board/tsat/3500/mmc/images/filesystems.cfg

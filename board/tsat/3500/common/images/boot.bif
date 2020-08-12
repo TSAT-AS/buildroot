@@ -1,10 +1,7 @@
 the_ROM_image:
 {
-	[aeskeyfile] efuse.nky
-	[pskfile] psk.pem
-	[sskfile] ssk.pem
-	[bootloader, authentication=rsa, encryption=aes] fsbl.elf
-	[authentication=rsa, encryption=aes] fpga.bit
-	[authentication=rsa] u-boot.elf
-	[authentication=rsa, load=0x2000000] u-boot.dtb
+	[bootloader] fsbl.elf
+	fpga.bit
+	u-boot.elf
+	[load=0x2000000] u-boot.dtb
 }

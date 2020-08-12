@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -19,13 +19,22 @@ echo -en "\xaa" > "$1/default_selector.bin"
 echo -en "\x00" > "$1/default_count.bin"
 
 # generate qspi full image
-cp -- board/tsat/3500/qspi/images/full.bif "$1"
-
+# release => secure boot image: encrypted and signed partitions
+# debug => non-secure boot
 FULL_IMG='qspi.img'
-echo "Creating full QSPI image: $1/$FULL_IMG"
 
+if [ "$RELEASE" = "1" ]; then
+  echo "Creating RELEASE QSPI image: $1/$FULL_IMG"
+  BIF='release.bif'
+  EXTRA_BOOTGEN_OPT=("-efuseppkbits" "hash_ppk.txt" "-p" "xc7z020" "-encrypt" "efuse")
+else
+  echo "Creating DEBUG QSPI image: $1/$FULL_IMG"
+  BIF='debug.bif'
+fi
+
+cp -- "board/tsat/3500/qspi/images/$BIF" "$1"
 cd -- "$1"
-bootgen -image full.bif -arch zynq -o "$FULL_IMG" -efuseppkbits hash_ppk.txt -p xc7z020 -encrypt efuse -w on -log info
+bootgen -image "$BIF" -arch zynq -o "$FULL_IMG" -w on -log info "${EXTRA_BOOTGEN_OPT[@]}"
 
 # generate qspi swu packages
 export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
