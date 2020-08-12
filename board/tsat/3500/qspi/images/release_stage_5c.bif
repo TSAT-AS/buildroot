@@ -1,0 +1,7 @@
+stage5c:
+{
+	[ppkfile] ppk.pem
+	[spkfile] spk.pem
+	[spksignature] spk.pem.sha256.sig
+	[authentication=rsa, presign=u-boot.elf.0.sha256.sig] u-boot.elf
+}

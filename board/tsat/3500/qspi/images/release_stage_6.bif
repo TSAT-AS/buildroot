@@ -1,0 +1,13 @@
+stage6:
+{
+  [bootimage] fpga_e_ac.bin
+  [bootimage] fsbl_e_ac.bin
+  [bootimage] u-boot-elf_ac.bin
+  [bootimage, load=0x2000000] u-boot-dtb_ac.bin
+  [bootimage, partition_owner=uboot, offset=0x4C0000] u-boot-script-itb_ac.bin
+  [offset=0x500000] default_selector.bin
+  [offset=0x540000] default_count.bin
+  [offset=0x5C0000] kernel-ramdisk-dtb.itb
+  [offset=0x11C0000] kernel-ramdisk-dtb.itb
+  [offset=0x1F00000] appfs.jffs2
+}
