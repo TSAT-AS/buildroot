@@ -1,12 +1,12 @@
 ################################################################################
 #
-# adrf6755
+# tps65233
 #
 ################################################################################
 
-ADRF6755_SITE_METHOD = git
-ADRF6755_SITE = ssh://git@dev.tsat.net:7999/lrsnmb/adrf6755.git
-ADRF6755_VERSION = 4bd74502e0fa78800c4d8ecf1de8455d4968fec4
+TPS65233_SITE_METHOD = git
+TPS65233_SITE = ssh://git@dev.tsat.net:7999/lrsnmb/tps65233.git
+TPS65233_VERSION = 0084471cdfb313ca5b249ef556e6b45d309eb21d
 
 $(eval $(kernel-module))
 $(eval $(generic-package))
