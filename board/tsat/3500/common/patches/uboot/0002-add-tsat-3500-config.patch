@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..8b221db
 --- /dev/null
 +++ b/include/configs/tsat_3500.h
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,84 @@
 +/*
 + * (C) Copyright 2013 Xilinx, Inc.
 + * (C) Copyright 2015 Antmicro Ltd
@@ -28,7 +28,12 @@ index 0000000..8b221db
 +#ifdef CONFIG_BOOTCOMMAND
 +#undef CONFIG_BOOTCOMMAND
 +#endif
-+#define CONFIG_BOOTCOMMAND		"run tsat_rsa_verify && run $modeboot || run distro_bootcmd"
++
++#ifdef RELEASE
++#define CONFIG_BOOTCOMMAND        "run tsat_rsa_verify && run qspiboot"
++#else
++#define CONFIG_BOOTCOMMAND        "run qspiboot"
++#endif
 +
 +#ifdef CONFIG_EXTRA_ENV_SETTINGS
 +#undef CONFIG_EXTRA_ENV_SETTINGS
@@ -40,7 +45,9 @@ index 0000000..8b221db
 +    "boot_image_offset=0x40000\0"               \
 +    "boot_image_size=0x500000\0"                \
 +                                                \
-+    "qspiboot=run tsat_qspiboot\0"              \
++    "qspiboot="				 \
++        "sf probe;"                             \
++        "run tsat_qspiboot\0"                   \
 +                                                \
 +    "mmcdev=0\0"                                \
 +                                                \
