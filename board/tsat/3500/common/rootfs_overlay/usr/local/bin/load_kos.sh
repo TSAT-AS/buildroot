@@ -11,7 +11,7 @@ case $MB_REV in
   2)
     /sbin/insmod /lib/modules/4.14.0-xilinx/extra/adrf6755.ko
     ;;
-  5)
+  [5-6])
     /sbin/insmod /lib/modules/4.14.0-xilinx/extra/adrf6755.ko
     /sbin/insmod /lib/modules/4.14.0-xilinx/extra/tps65233.ko
     ;;
