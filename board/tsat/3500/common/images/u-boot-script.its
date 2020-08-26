@@ -1,0 +1,21 @@
+/*
+ * TSAT3500: FIT with boot script
+ */
+
+/dts-v1/;
+
+/ {
+	description = "TSAT3500 boot script";
+
+	images {
+		script-1 {
+			description = "default bootscript";
+			data = /incbin/("./boot_script.txt");
+			type = "script";
+			compression = "none";
+			hash-1 {
+				algo = "sha1";
+			};
+		};
+	};
+};

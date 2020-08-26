@@ -14,7 +14,6 @@ else
 fi
 
 load mmc ${mmcdev}:${kpart} ${tsat_kernel_loadaddr} ${tsat_mmc_kernel_image}
-load mmc ${mmcdev}:${kpart} ${tsat_devicetree_loadaddr} ${tsat_mmc_devicetree_image}
 
 setenv bootargs ${tsat_def_args} rootwait root=/dev/mmcblk0p${rpart} copy=${tsat_firmware_selector}
-bootm ${tsat_kernel_loadaddr} - ${tsat_devicetree_loadaddr}
+bootm ${tsat_kernel_loadaddr}
