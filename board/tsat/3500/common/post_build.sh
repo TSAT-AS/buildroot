@@ -10,4 +10,5 @@ else
   SWU_KEY_SRC_NAME='swu-debug-pub.pem'
 fi
 
+mkdir -p -- "$SWU_KEY_DST_DIR"
 cp -- "$SWU_KEY_SRC_DIR/$SWU_KEY_SRC_NAME" "$SWU_KEY_DST_DIR/$SWU_KEY_DST_NAME"

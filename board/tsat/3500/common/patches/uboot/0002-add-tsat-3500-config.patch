@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..8b221db
 --- /dev/null
 +++ b/include/configs/tsat_3500.h
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,89 @@
 +/*
 + * (C) Copyright 2013 Xilinx, Inc.
 + * (C) Copyright 2015 Antmicro Ltd
@@ -24,6 +24,11 @@ index 0000000..8b221db
 +
 +#include <configs/zynq-common.h>
 +#include <configs/enclustra_zx_common.h>
++
++#ifdef CONFIG_XILINX_OF_BOARD_DTB_ADDR
++#undef CONFIG_XILINX_OF_BOARD_DTB_ADDR
++#endif
++#define CONFIG_XILINX_OF_BOARD_DTB_ADDR 0x2000000
 +
 +#ifdef CONFIG_BOOTCOMMAND
 +#undef CONFIG_BOOTCOMMAND
@@ -85,6 +90,6 @@ index 0000000..8b221db
 +        "sf read ${tsat_bootscript_loadaddr} ${tsat_qspi_bootscript_offset} ${tsat_qspi_bootscript_size} && "\
 +        "source ${tsat_bootscript_loadaddr}:script-1\0"\
 +    "fdtcontroladdr=0x2000000\0"                    \
-+    "tsat_rsa_verify=sf probe && sf read 0x100000 ${boot_image_offset} ${boot_image_size} && zynqrsa 0x100000\0"
++    "tsat_rsa_verify=sf probe && sf read 0x100000 ${boot_image_offset} ${boot_image_size} && zynq rsa 0x100000\0"
 +
 +#endif /* __CONFIG_TSAT_3500_H */
