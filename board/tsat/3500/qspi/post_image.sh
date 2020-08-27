@@ -23,7 +23,7 @@ echo -en "\x00" > "$1/default_count.bin"
 # debug => non-secure boot
 FULL_IMG='qspi.img'
 
-if [ "$RELEASE" = "1" ]; then
+if [ "$TSAT_RELEASE" = "1" ]; then
   echo "Creating RELEASE QSPI image: $1/$FULL_IMG"
   BIF='release.bif'
   EXTRA_BOOTGEN_OPT=("-efuseppkbits" "hash_ppk.txt" "-p" "xc7z020" "-encrypt" "efuse")

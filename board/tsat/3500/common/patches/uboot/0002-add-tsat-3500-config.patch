@@ -34,7 +34,7 @@ index 0000000..8b221db
 +#undef CONFIG_BOOTCOMMAND
 +#endif
 +
-+#ifdef RELEASE
++#ifdef TSAT_RELEASE
 +#define CONFIG_BOOTCOMMAND        "run tsat_rsa_verify && run qspiboot"
 +#else
 +#define CONFIG_BOOTCOMMAND        "run qspiboot"
