@@ -1,0 +1,3 @@
+source "package/tsat/bootgen/Config.in.host"
+source "package/tsat/mkbootimage/Config.in.host"
+source "package/tsat/mkswu/Config.in.host"

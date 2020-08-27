@@ -1,0 +1,316 @@
+/dts-v1/;
+/include/ "zynq-7000.dtsi"
+
+/ {
+  model = "Enclustra Mars ZX3 SOM";
+  aliases {
+    ethernet0 = &gem0;
+    ethernet1 = &gem1;
+    mmc0 = &sdhci0;
+    serial0 = &uart0;
+    serial1 = &uart1;
+    serial2 = &uart2;
+    spi0 = &qspi;
+    gpio0 = &gpio0;
+    gpio1 = &tca6416_led;
+    gpio2 = &tca6416_gpio;
+    i2c0 = &i2c0;
+    i2c1 = &i2c1;
+  };
+  chosen {
+    stdout-path = &uart1;
+  };
+  amba: amba {
+    uart2: serial@43c10000 {
+      clock-frequency = <100000000>;
+      clock-names = "s_axi_aclk";
+      clocks = <&clkc 15>;
+      compatible = "xlnx,xps-uart16550", "ns16550a";
+      status = "disabled";
+      current-speed = <115200>;
+      interrupt-names = "ip2intc_irpt";
+      interrupt-parent = <&intc>;
+      interrupts = <0 33 4>;
+      port-number = <0>;
+      reg = <0x43c10000 0x10000>;
+      reg-offset = <0x1000>;
+      reg-shift = <2>;
+      xlnx,external-xin-clk-hz = <0x17d7840>;
+      xlnx,external-xin-clk-hz-d = <0x19>;
+      xlnx,has-external-rclk = <0x0>;
+      xlnx,has-external-xin = <0x0>;
+      xlnx,is-a-16550 = <0x1>;
+      xlnx,s-axi-aclk-freq-hz-d = "100.0";
+      xlnx,use-modem-ports = <0x1>;
+      xlnx,use-user-ports = <0x1>;
+    };
+  };
+  memory@0 {
+    device_type = "memory";
+    reg = <0x0 0x20000000>;
+  };
+  mdio@e000b000 {
+    compatible = "cdns,macb-mdio";
+    reg = <0xe000b000 0x1000>;
+    clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
+    clock-names = "pclk", "hclk", "tx_clk";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    phy3: ethernet-phy@3 {
+      reg = <3>;
+    };
+  };
+  mdio1@e000c000 {
+    compatible = "cdns,macb-mdio";
+    reg = <0xe000c000 0x1000>;
+    clocks = <&clkc 31>, <&clkc 31>;
+    clock-names = "pclk", "hclk";
+    #address-cells = <1>;
+    #size-cells = <0>;
+    phy7: ethernet-phy@7 {
+      reg = <7>;
+    };
+  };
+  fpga_reg_fft@44000000 {
+    compatible = "generic-uio";
+    reg = <0x44000000 0x1000>;
+    interrupt-parent = <0x4>;
+    interrupts = <0x0 0x1d 0x1>;
+  };
+  fpga_reg_data@44000000 {
+    compatible = "generic-uio";
+    reg = <0x44000000 0x1000>;
+    interrupt-parent = <0x4>;
+    interrupts = <0x0 0x1e 0x1>;
+  };
+  reset_interrupt@44000000 {
+    compatible = "generic-uio";
+    reg = <0x44000000 0x1000>;
+    interrupt-parent = <0x4>;
+    interrupts = <0x0 0x1f 0x1>;
+  };
+  ftdi_interrupt@44000000 {
+    compatible = "generic-uio";
+    reg = <0x44000000 0x1000>;
+    interrupt-parent = <0x4>;
+    interrupts = <0x0 0x20 0x1>;
+  };
+  gpio-leds {
+    compatible = "gpio-leds";
+    led0 {
+      label = "board:green:tx";
+      gpios = <&tca6416_led 0 0>;
+      default-state = "off";
+    };
+    led1 {
+      label = "board:red:tx";
+      gpios = <&tca6416_led 1 0>;
+      default-state = "off";
+    };
+    led2 {
+      label = "board:green:rx";
+      gpios = <&tca6416_led 2 0>;
+      default-state = "off";
+    };
+    led3 {
+      label = "board:red:rx";
+      gpios = <&tca6416_led 3 0>;
+      default-state = "off";
+    };
+    led4 {
+      label = "board:green:lnk";
+      gpios = <&tca6416_led 4 0>;
+      default-state = "off";
+    };
+    led5 {
+      label = "board:red:lnk";
+      gpios = <&tca6416_led 5 0>;
+      default-state = "off";
+    };
+    led6 {
+      label = "board:green:loc";
+      gpios = <&tca6416_led 6 0>;
+      default-state = "off";
+    };
+    led7 {
+      label = "board:red:loc";
+      gpios = <&tca6416_led 7 0>;
+      default-state = "off";
+    };
+    led8 {
+      label = "board:green:buc";
+      gpios = <&tca6416_led 8 0>;
+      default-state = "off";
+    };
+    led9 {
+      label = "board:red:buc";
+      gpios = <&tca6416_led 9 0>;
+      default-state = "off";
+    };
+    led10 {
+      label = "board:green:lnb";
+      gpios = <&tca6416_led 10 0>;
+      default-state = "off";
+    };
+    led11 {
+      label = "board:red:lnb";
+      gpios = <&tca6416_led 11 0>;
+      default-state = "off";
+    };
+    led12 {
+      label = "board:green:cpu";
+      gpios = <&tca6416_led 12 0>;
+      default-state = "off";
+    };
+    led13 {
+      label = "board:red:cpu";
+      gpios = <&tca6416_led 13 0>;
+      default-state = "off";
+    };
+  };
+};
+&qspi {
+  status = "okay";
+  is-dual = <0>;
+  num-cs = <1>;
+  flash@0 {
+    compatible = "s25fl512s";
+    reg = <0x0>;
+    spi-tx-bus-width = <1>;
+    spi-rx-bus-width = <4>;
+    spi-max-frequency = <50000000>;
+    #address-cells = <1>;
+    #size-cells = <1>;
+    partition@0 {
+      label = "boot";
+      reg = <0x0 0x500000>;
+      read-only;
+    };
+    partition@500000 {
+      label = "boot-script";
+      reg = <0x500000 0x40000>;
+      read-only;
+    };
+    partition@540000 {
+      label = "boot-selector";
+      reg = <0x540000 0x40000>;
+    };
+    partition@580000 {
+      label = "boot-count";
+      reg = <0x580000 0x40000>;
+    };
+    partition@600000 {
+      label = "system-a";
+      reg = <0x600000 0xC00000>;
+    };
+    partition@1200000 {
+      label = "system-b";
+      reg = <0x1200000 0xC00000>;
+    };
+    partition@1E00000 {
+      label = "rootfs-data";
+      reg = <0x1E00000 0x140000>;
+    };
+    partition@1F40000 {
+      label = "appfs";
+      reg = <0x1F40000 0x20C0000>;
+    };
+  };
+};
+&gem0 {
+  status = "okay";
+  phy-mode = "rgmii-id";
+  phy-handle = <&phy3>;
+};
+&gem1 {
+  status = "okay";
+  phy-mode = "mii-id";
+  phy-handle = <&phy7>;
+  xlnx,emio = <1>;
+};
+&sdhci0 {
+  status = "okay";
+  broken-cd = <0x1>;
+  wp-inverted = <0x1>;
+};
+&uart0 {
+  status = "okay";
+};
+&uart1 {
+  status = "okay";
+};
+&uart2 {
+  status = "okay";
+};
+&i2c0 {
+  status = "okay";
+  isl12022: isl12022@68 {
+    status = "okay";
+    compatible = "isil,isl12022";
+    reg = <0x6f>;
+  };
+  zynq_eeprom: eeprom@5c {
+    compatible = "24c01"; // Maxim DS28CN01
+    reg = <0x5c>;
+    read-only;
+  };
+};
+&i2c1 {
+  clock-frequency = <200000>;
+  status = "okay";
+  clock-frequency = <0x30d40>;
+  tca6416_led: gpio@20 {
+    compatible = "ti,tca6416";
+    reg = <0x20>;
+    gpio-controller;
+    #gpio-cells = <2>;
+  };
+  tca6416_gpio: gpio@21 {
+    compatible = "ti,tca6416";
+    reg = <0x21>;
+    gpio-controller;
+    #gpio-cells = <2>;
+  };
+  ina226_rx: ina226rx@40 {
+    compatible = "ti,ina226";
+    reg = <0x40>;
+    shunt-resistor = <40000>;
+  };
+  ina226_tx: ina226tx@41 {
+    compatible = "ti,ina226";
+    reg = <0x41>;
+    shunt-resistor = <10000>;
+  };
+  eeprom_mb: eeprom@50 {
+    compatible = "atmel,24c04";
+    reg = <0x50>;
+  };
+  eeprom_db: eeprom@52 {
+    compatible = "atmel,24c04";
+    reg = <0x52>;
+  };
+  adrf6755: adrf6755@60 {
+    status = "okay";
+    compatible = "adrf6755";
+    reg = <0x60>;
+    ref_frequency_KHz = <0x2710>;
+    pfd_frequency_KHz = <0x4e20>;
+  };
+  tps65233: tps65233@61 {
+    status = "okay";
+    compatible = "tps65233";
+    reg = <0x61>;
+    out_voltage = <0x6>;
+    current_limit_source = <0x1>;
+    tone_source = <0x1>;
+    tone_position = <0x1>;
+  };
+  emc1403_mb: emc1403@3c {
+    compatible = "smsc,emc1403";
+    reg = <0x3c>;
+  };
+  emc1403_txbox: emc1403@4c {
+    compatible = "smsc,emc1403";
+    reg = <0x4c>;
+  };
+};

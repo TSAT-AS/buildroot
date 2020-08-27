@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+set -e
+
+# create appfs filesystem
+APPFS_INPUT="$1/appfs"
+APPFS_OUTPUT="$1/appfs.jffs2"
+test -d "$APPFS_INPUT" || exit 1
+test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
+output/host/sbin/mkfs.jffs2 -v -U -e 256 -l -d "$APPFS_INPUT" -o "$APPFS_OUTPUT"
+
+# build boot script FIT image
+cp -v -- board/tsat/3500/common/images/u-boot-script.its "$1"
+cp -v -- board/tsat/3500/qspi/uboot/boot_script.txt "$1"
+mkimage -f "$1/u-boot-script.its" "$1/u-boot-script.itb"
+
+# create default boot-selector and boot-count
+echo -en "\xaa" > "$1/default_selector.bin"
+echo -en "\x00" > "$1/default_count.bin"
+
+# generate qspi full image
+# release => secure boot image: encrypted and signed partitions
+# debug => non-secure boot
+FULL_IMG='qspi.img'
+
+if [ "$TSAT_RELEASE" = "1" ]; then
+  echo "Creating RELEASE QSPI image: $1/$FULL_IMG"
+  BIF='release.bif'
+  EXTRA_BOOTGEN_OPT=("-efuseppkbits" "hash_ppk.txt" "-p" "xc7z020" "-encrypt" "efuse")
+else
+  echo "Creating DEBUG QSPI image: $1/$FULL_IMG"
+  BIF='debug.bif'
+fi
+
+cp -- "board/tsat/3500/qspi/images/$BIF" "$1"
+cd -- "$1"
+bootgen -image "$BIF" -arch zynq -o "$FULL_IMG" -w on -log info "${EXTRA_BOOTGEN_OPT[@]}"
+
+# generate qspi swu packages
+export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
+export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/qspi-system-postinstall.sh"
+$HOST_DIR/bin/mkswu-qspi-system 'kernel-ramdisk-dtb.itb'
+$HOST_DIR/bin/mkswu-qspi-full 'qspi-system.swu' 'terminal.swu' 'fpga.swu'

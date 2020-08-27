@@ -1,0 +1,19 @@
+# set LEDs
+i2c dev 1
+i2c mw 20 6 0
+i2c mw 20 7 0
+
+if test ${tsat_firmware_selector} = A; then
+  echo "(${tsat_firmware_selector}) => use firmware A"
+  setenv kpart ${tsat_mmc_kernel_partition_a}
+  setenv rpart ${tsat_mmc_rootfs_partition_a}
+else
+  echo "(${tsat_firmware_selector}) => use firmware B"
+  setenv kpart ${tsat_mmc_kernel_partition_b}
+  setenv rpart ${tsat_mmc_rootfs_partition_b}
+fi
+
+load mmc ${mmcdev}:${kpart} ${tsat_kernel_loadaddr} ${tsat_mmc_kernel_image}
+
+setenv bootargs ${tsat_def_args} rootwait root=/dev/mmcblk0p${rpart} copy=${tsat_firmware_selector}
+bootm ${tsat_kernel_loadaddr}

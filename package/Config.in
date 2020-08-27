@@ -2416,3 +2416,7 @@ menu "Text editors and viewers"
 endmenu
 
 endmenu
+
+menu "Target packages (TSAT)"
+	source "package/tsat/Config.in"
+endmenu

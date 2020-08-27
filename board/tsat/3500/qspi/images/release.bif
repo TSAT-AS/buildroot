@@ -1,0 +1,16 @@
+the_ROM_image:
+{
+	[aeskeyfile] efuse.nky
+	[pskfile] psk.pem
+	[sskfile] ssk.pem
+	[bootloader, authentication=rsa, encryption=aes] fsbl.elf
+	[authentication=rsa, encryption=aes] fpga.bit
+	[authentication=rsa] u-boot.elf
+	[authentication=rsa, load=0x2000000] u-boot.dtb
+	[authentication=rsa, offset=0x4C0000, partition_owner=uboot] u-boot-script.itb
+	[offset=0x500000] default_selector.bin
+	[offset=0x540000] default_count.bin
+	[offset=0x5C0000] kernel-ramdisk-dtb.itb
+	[offset=0x11C0000] kernel-ramdisk-dtb.itb
+	[offset=0x1F00000] appfs.jffs2
+}

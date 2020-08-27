@@ -1,0 +1,7 @@
+the_ROM_image:
+{
+	[bootloader] fsbl.elf
+	fpga.bit
+	u-boot.elf
+	[load=0x2000000] u-boot.dtb
+}
