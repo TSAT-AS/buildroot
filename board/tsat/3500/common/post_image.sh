@@ -31,8 +31,5 @@ cp -- ../binaries/fpga.bit "$1"
 
 # create terminal and fpga SWUs
 cd -- "$1"
-export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
-export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/fpga-postinstall.sh"
-$HOST_DIR/bin/mkswu-fpga 'fpga.tar.gz'
-export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/terminal-postinstall.sh"
-$HOST_DIR/bin/mkswu-terminal 'terminal.tar.gz'
+$HOST_DIR/bin/mkswu.py fpga 'fpga.tar.gz'
+$HOST_DIR/bin/mkswu.py terminal 'terminal.tar.gz'

@@ -37,7 +37,5 @@ cd -- "$1"
 bootgen -image "$BIF" -arch zynq -o "$FULL_IMG" -w on -log info "${EXTRA_BOOTGEN_OPT[@]}"
 
 # generate qspi swu packages
-export KEY="$HOST_DIR/usr/share/mkswu/private.pem"
-export POSTSCRIPT="$HOST_DIR/usr/share/mkswu/qspi-system-postinstall.sh"
-$HOST_DIR/bin/mkswu-qspi-system 'kernel-ramdisk-dtb.itb'
-$HOST_DIR/bin/mkswu-qspi-full 'qspi-system.swu' 'terminal.swu' 'fpga.swu'
+$HOST_DIR/bin/mkswu.py system 'kernel-ramdisk-dtb.itb'
+$HOST_DIR/bin/mkswu.py full 'kernel-ramdisk-dtb.itb' 'terminal.tar.gz' 'fpga.tar.gz'
