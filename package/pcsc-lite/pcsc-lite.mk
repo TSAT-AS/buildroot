@@ -11,6 +11,7 @@ PCSC_LITE_INSTALL_STAGING = YES
 PCSC_LITE_DEPENDENCIES = host-pkgconf
 PCSC_LITE_LICENSE = BSD-2-Clause (auth), BSD-3-Clause, GPL-3.0+ (demo, spy, tests), ISC (simclist)
 PCSC_LITE_LICENSE_FILES = COPYING GPL-3.0.txt
+HOST_PCSC_LITE_CONF_OPTS += --disable-libsystemd --disable-libudev --disable-libusb
 
 # - libudev and libusb are optional
 # - libudev and libusb can't be used together
@@ -44,3 +45,4 @@ PCSC_LITE_CONF_OPTS += --enable-embedded
 endif
 
 $(eval $(autotools-package))
+$(eval $(host-autotools-package))
