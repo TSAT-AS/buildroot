@@ -107,6 +107,8 @@ endef
 
 define HOST_LIBOPENSSL_INSTALL_CMDS
 	$(HOST_MAKE_ENV) $(MAKE) -C $(@D) install
+	$(INSTALL) -m 0644 -D $(LIBOPENSSL_PKGDIR)openssl.cnf $(HOST_DIR)/etc/ssl/openssl.cnf
+	$(SED) "s#= BR_HOST#= $(HOST_DIR)#g" $(HOST_DIR)/etc/ssl/openssl.cnf
 endef
 
 define LIBOPENSSL_INSTALL_TARGET_CMDS
