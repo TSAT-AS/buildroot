@@ -24,8 +24,8 @@ echo -en "\x00" > "$1/default_count.bin"
 FULL_IMG='qspi.img'
 
 if [ "$TSAT_RELEASE" = "1" ]; then
-  PRI_KEY_ID='pkcs11:object=Private key for PIV Authentication;type=private'
-  SEC_KEY_ID='pkcs11:object=Private key for Key Management;type=private'
+  PRI_KEY_ID='pkcs11:id=%01;type=private'
+  SEC_KEY_ID='pkcs11:id=%03;type=private'
 
   echo "Creating release QSPI image: $1/$FULL_IMG"
 
