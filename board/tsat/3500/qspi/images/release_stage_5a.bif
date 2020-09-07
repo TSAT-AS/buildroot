@@ -1,0 +1,7 @@
+stage5a:
+{
+	[ppkfile] ppk.pem
+	[spkfile] spk.pem
+	[spksignature] spk.pem.sha256.sig
+	[bootimage, authentication=rsa, presign=fsbl.elf.0.sha256.sig] fsbl_e.bin
+}

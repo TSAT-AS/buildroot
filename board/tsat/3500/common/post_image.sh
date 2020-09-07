@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -20,10 +20,21 @@ tar -x --no-same-owner -v -f "$1/terminal.tar.gz" -C "$APPFS_TERM_DIR"
 ln -snf "$(basename "$APPFS_FPGA_DIR")/fpga_viterbi_low.bit" "$APPFS_DIR/fpga.bit"
 ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
 
-# build signed FIT image
-cp -v -- board/tsat/3500/common/images/kernel-ramdisk-dtb.its "$1"
-mkimage -f "$1/kernel-ramdisk-dtb.its" "$1/kernel-ramdisk-dtb.itb"
-mkimage -F "$1/kernel-ramdisk-dtb.itb" -k "$1/keys" -K "$1/u-boot.dtb" -c "Signed by build system" -r
+# create FIT image
+echo "create system FIT..."
+if [ "$TSAT_RELEASE" = "1" ]; then
+  FIT_SRC='kernel-ramdisk-dtb-release.its'
+else
+  FIT_SRC='kernel-ramdisk-dtb-debug.its'
+fi
+cp -v -- "board/tsat/3500/common/images/$FIT_SRC" "$1"
+mkimage -f "$1/$FIT_SRC" "$1/kernel-ramdisk-dtb.itb"
+
+# sign FIT image (only in release builds)
+if [ "$TSAT_RELEASE" = "1" ]; then
+  echo "sign system FIT..."
+  mkimage -F "$1/kernel-ramdisk-dtb.itb" -k 'id=%04' -N pkcs11 -K "$1/u-boot.dtb" -c "Signed by build system" -r
+fi
 
 # get files for boot image creation
 cp -- ../binaries/fsbl.elf "$1"
@@ -31,5 +42,8 @@ cp -- ../binaries/fpga.bit "$1"
 
 # create terminal and fpga SWUs
 cd -- "$1"
-$HOST_DIR/bin/mkswu.py fpga 'fpga.tar.gz'
-$HOST_DIR/bin/mkswu.py terminal 'terminal.tar.gz'
+if [ "$TSAT_RELEASE" = "1" ]; then
+  SIGN_OPT=('--release')
+fi
+$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" fpga 'fpga.tar.gz'
+$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" terminal 'terminal.tar.gz'
