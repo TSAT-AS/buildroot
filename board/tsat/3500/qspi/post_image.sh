@@ -102,5 +102,8 @@ else
 fi
 
 # generate qspi swu packages
-$HOST_DIR/bin/mkswu.py system 'kernel-ramdisk-dtb.itb'
-$HOST_DIR/bin/mkswu.py full 'kernel-ramdisk-dtb.itb' 'terminal.tar.gz' 'fpga.tar.gz'
+if [ "$TSAT_RELEASE" = "1" ]; then
+  SIGN_OPT=('--release')
+fi
+$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" system 'kernel-ramdisk-dtb.itb'
+$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" full 'kernel-ramdisk-dtb.itb' 'terminal.tar.gz' 'fpga.tar.gz'

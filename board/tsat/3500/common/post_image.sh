@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 set -e
 
@@ -42,5 +42,8 @@ cp -- ../binaries/fpga.bit "$1"
 
 # create terminal and fpga SWUs
 cd -- "$1"
-$HOST_DIR/bin/mkswu.py fpga 'fpga.tar.gz'
-$HOST_DIR/bin/mkswu.py terminal 'terminal.tar.gz'
+if [ "$TSAT_RELEASE" = "1" ]; then
+  SIGN_OPT=('--release')
+fi
+$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" fpga 'fpga.tar.gz'
+$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" terminal 'terminal.tar.gz'
