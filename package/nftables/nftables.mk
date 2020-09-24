@@ -12,6 +12,7 @@ NFTABLES_DEPENDENCIES = libmnl libnftnl host-bison host-flex \
 NFTABLES_LICENSE = GPL-2.0
 NFTABLES_LICENSE_FILES = COPYING
 NFTABLES_CONF_OPTS = --disable-man-doc --disable-pdf-doc
+NFTABLES_INSTALL_STAGING = YES
 
 ifeq ($(BR2_PACKAGE_GMP),y)
 NFTABLES_DEPENDENCIES += gmp
