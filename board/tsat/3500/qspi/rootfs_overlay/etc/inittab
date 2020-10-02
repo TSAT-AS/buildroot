@@ -52,6 +52,9 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 ::sysinit:/bin/echo 0 > /sys/class/leds/board:red:cpu/brightness
 ::sysinit:/bin/echo 255 > /sys/class/leds/board:green:cpu/brightness
 
+# load firewall rules
+::sysinit:/usr/sbin/nft -f /root/current/rules.nft
+
 # insert our kernel modules
 ::sysinit:/usr/local/bin/load_kos.sh
 
