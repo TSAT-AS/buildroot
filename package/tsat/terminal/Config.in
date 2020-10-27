@@ -15,6 +15,7 @@ config BR2_PACKAGE_TERMINAL
 	select BR2_PACKAGE_LIBNL
 	select BR2_PACKAGE_LIBOPENSSL
 	select BR2_PACKAGE_LIBGPIOD
+	select BR2_PACKAGE_NFTABLES
 	depends on BR2_PACKAGE_LIBIIO
 	help
 	  Main terminal executable
