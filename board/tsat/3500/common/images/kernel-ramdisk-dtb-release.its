@@ -40,7 +40,6 @@
 		conf-1 {
 			description = "default configuration";
 			kernel = "kernel-1";
-			ramdisk = "ramdisk-1";
 			fdt = "fdt-1";
 			signature-1 {
 				algo = "sha1,rsa2048";
