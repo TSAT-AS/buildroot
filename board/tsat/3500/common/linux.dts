@@ -305,12 +305,16 @@
     tone_source = <0x1>;
     tone_position = <0x1>;
   };
-  emc1403_mb: emc1403@3c {
-    compatible = "smsc,emc1403";
+  emc1412_mb: emc1412@3c {
+    compatible = "smsc,emc1412";
     reg = <0x3c>;
   };
-  emc1403_txbox: emc1403@4c {
-    compatible = "smsc,emc1403";
+  emc1412_txbox: emc1412@4c {
+    compatible = "smsc,emc1412";
     reg = <0x4c>;
+  };
+  emc1412_sodimm: emc1412@7c {
+    compatible = "smsc,emc1412";
+    reg = <0x7c>;
   };
 };
