@@ -3,11 +3,37 @@
 set -e
 
 # create appfs filesystem
+# UBI/UBIFS input parameters described in http://www.linux-mtd.infradead.org/faq/ubifs.html#L_mkfubifs
+# values found on target by running 'mtdinfo -u /dev/mtd7':
+# mtd7
+# Name:                           appfs
+# Type:                           nor
+# Eraseblock size:                262144 bytes, 256.0 KiB
+# Amount of eraseblocks:          131 (34340864 bytes, 32.7 MiB)
+# Minimum input/output unit size: 1 byte
+# Sub-page size:                  1 byte
+# Character device major/minor:   90:14
+# Bad blocks are allowed:         false
+# Device is writable:             true
+# Default UBI VID header offset:  64
+# Default UBI data offset:        128
+# Default UBI LEB size:           262016 bytes, 255.8 KiB
+# Maximum UBI volumes count:      128
+
 APPFS_INPUT="$1/appfs"
-APPFS_OUTPUT="$1/appfs.jffs2"
+APPFS_OUTPUT="$1/appfs.ubifs"
 test -d "$APPFS_INPUT" || exit 1
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
-output/host/sbin/mkfs.jffs2 -v -U -e 256 -l -d "$APPFS_INPUT" -o "$APPFS_OUTPUT"
+$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT"
+
+cp -- board/tsat/3500/qspi/images/appfs.cfg "$1"
+UBI_IMAGE_INPUT="$1/appfs.cfg"
+UBI_IMAGE_OUTPUT="$1/appfs.img"
+test -f "$UBI_IMAGE_INPUT" || exit 1
+test -f "$UBI_IMAGE_OUTPUT" && rm "$UBI_IMAGE_OUTPUT"
+pushd -- "$1"
+$HOST_DIR/sbin/ubinize --output="$UBI_IMAGE_OUTPUT" --peb-size=256KiB --min-io-size=1 "$UBI_IMAGE_INPUT"
+popd
 
 # build boot script FIT image
 cp -v -- board/tsat/3500/common/images/u-boot-script.its "$1"
