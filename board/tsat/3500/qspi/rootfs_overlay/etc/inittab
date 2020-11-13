@@ -31,6 +31,7 @@
 ::sysinit:/bin/mount -t overlay overlay -o lowerdir=/etc,upperdir=/overlay/etc,workdir=/overlay/work /etc
 
 # Mount remaining entries
+::sysinit:/usr/sbin/ubiattach -p /dev/mtd7
 ::sysinit:/bin/mount -a
 
 # Add link to terminal log directory
