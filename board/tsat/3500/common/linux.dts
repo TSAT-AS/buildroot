@@ -189,7 +189,6 @@
     partition@500000 {
       label = "boot-script";
       reg = <0x500000 0x40000>;
-      read-only;
     };
     partition@540000 {
       label = "boot-selector";
