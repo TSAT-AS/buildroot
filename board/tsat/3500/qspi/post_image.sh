@@ -33,12 +33,14 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   cp -- board/tsat/3500/common/keys/bootgen-release-ppk.pem "$1/ppk.pem"
   cp -- board/tsat/3500/common/keys/bootgen-release-spk.pem "$1/spk.pem"
   cp -- ../keys/efuse.nky.enc "$1"
+  cp -- ../keys/appfs.key.enc "$1"
   cd -- "$1"
 
   TMP_DIR=$(mktemp -d -p /dev/shm)
   LINK_NAME="/dev/shm/tmp"
   ln -snf "$TMP_DIR" "$LINK_NAME"
   gpg --decrypt --armor --output "$TMP_DIR/efuse.nky" efuse.nky.enc
+  gpg --decrypt --armor --output "$TMP_DIR/appfs.key" appfs.key.enc
   gpg-connect-agent 'scd killscd' /bye # force GPG to release Yubikey and let PIV be used
 
   echo "Stage 0: generate SPK hash"
@@ -58,6 +60,9 @@ if [ "$TSAT_RELEASE" = "1" ]; then
 
   echo "Stage 2b: encrypt FPGA"
   bootgen -arch zynq -image release_stage_2b.bif -w on -o fpga_e.bin -encrypt efuse
+
+  echo "Stage 2c: encrypt APPFS key"
+  bootgen -arch zynq -image release_stage_2c.bif -w on -o appfskey_e.bin -encrypt efuse
 
   echo "Stage 3: generate partition hashes"
   bootgen -arch zynq -image release_stage_3.bif -generate_hashes
