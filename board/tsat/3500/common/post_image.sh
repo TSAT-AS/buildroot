@@ -33,7 +33,7 @@ mkimage -f "$1/$FIT_SRC" "$1/kernel-ramdisk-dtb.itb"
 # sign FIT image (only in release builds)
 if [ "$TSAT_RELEASE" = "1" ]; then
   echo "sign system FIT..."
-  mkimage -F "$1/kernel-ramdisk-dtb.itb" -k 'id=%04' -N pkcs11 -K "$1/u-boot.dtb" -c "Signed by build system" -r
+  mkimage -F "$1/kernel-ramdisk-dtb.itb" -k 'id=%15' -N pkcs11 -K "$1/u-boot.dtb" -c "Signed by build system" -r
 fi
 
 # get files for boot image creation

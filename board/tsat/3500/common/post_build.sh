@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SWU_KEY_SRC_DIR='board/tsat/3500/common/keys'
+SWU_KEY_SRC_DIR='../keys'
 SWU_KEY_DST_DIR="$TARGET_DIR/usr/local/share"
 SWU_KEY_DST_NAME='public.pem'
 

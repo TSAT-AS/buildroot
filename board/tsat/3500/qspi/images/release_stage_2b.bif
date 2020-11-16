@@ -1,5 +1,5 @@
 stage2b:
 {
-	[aeskeyfile] efuse.nky
+	[aeskeyfile] /dev/shm/tmp/efuse.nky
 	[encryption=aes] fpga.bit
 }

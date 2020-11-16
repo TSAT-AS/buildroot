@@ -1,0 +1,5 @@
+stage2c:
+{
+	[aeskeyfile] /dev/shm/tmp/efuse.nky
+	[encryption=aes] /dev/shm/tmp/appfs.key
+}
