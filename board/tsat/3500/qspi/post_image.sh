@@ -4,15 +4,15 @@ set -e
 
 # create appfs filesystem
 # UBI/UBIFS input parameters described in http://www.linux-mtd.infradead.org/faq/ubifs.html#L_mkfubifs
-# values found on target by running 'mtdinfo -u /dev/mtd7':
-# mtd7
+# values found on target by running 'mtdinfo -u /dev/mtd8':
+# mtd8
 # Name:                           appfs
 # Type:                           nor
 # Eraseblock size:                262144 bytes, 256.0 KiB
-# Amount of eraseblocks:          131 (34340864 bytes, 32.7 MiB)
+# Amount of eraseblocks:          130 (34078720 bytes, 32.5 MiB)
 # Minimum input/output unit size: 1 byte
 # Sub-page size:                  1 byte
-# Character device major/minor:   90:14
+# Character device major/minor:   90:16
 # Bad blocks are allowed:         false
 # Device is writable:             true
 # Default UBI VID header offset:  64
@@ -24,7 +24,7 @@ APPFS_INPUT="$1/appfs"
 APPFS_OUTPUT="$1/appfs.ubifs"
 test -d "$APPFS_INPUT" || exit 1
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
-$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT"
+$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --min-io-size=1 --leb-size=262016 --max-leb-cnt=130 --output="$APPFS_OUTPUT"
 
 cp -- board/tsat/3500/qspi/images/appfs.cfg "$1"
 UBI_IMAGE_INPUT="$1/appfs.cfg"
