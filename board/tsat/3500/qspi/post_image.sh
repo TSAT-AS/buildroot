@@ -32,7 +32,14 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   cp -- board/tsat/3500/qspi/images/release_* "$1"
   cp -- board/tsat/3500/common/keys/bootgen-release-ppk.pem "$1/ppk.pem"
   cp -- board/tsat/3500/common/keys/bootgen-release-spk.pem "$1/spk.pem"
+  cp -- ../keys/efuse.nky.enc "$1"
   cd -- "$1"
+
+  TMP_DIR=$(mktemp -d -p /dev/shm)
+  LINK_NAME="/dev/shm/tmp"
+  ln -snf "$TMP_DIR" "$LINK_NAME"
+  gpg --decrypt --armor --output "$TMP_DIR/efuse.nky" efuse.nky.enc
+  gpg-connect-agent 'scd killscd' /bye # force GPG to release Yubikey and let PIV be used
 
   echo "Stage 0: generate SPK hash"
   bootgen -image release_stage_0.bif -arch zynq -w on -generate_hashes
@@ -93,6 +100,10 @@ if [ "$TSAT_RELEASE" = "1" ]; then
 
   echo "Stage 8: generate final bootable image"
   bootgen -arch zynq -image release_stage_8.bif -w on -o "${FULL_IMG}" -log info
+
+  # cleanup
+  rm "$LINK_NAME"
+  rm -rf "$TMP_DIR"
 else
   echo "Creating DEBUG QSPI image: $1/$FULL_IMG"
   BIF='debug.bif'
