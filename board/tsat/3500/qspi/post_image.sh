@@ -30,8 +30,8 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   echo "Creating release QSPI image: $1/$FULL_IMG"
 
   cp -- board/tsat/3500/qspi/images/release_* "$1"
-  cp -- board/tsat/3500/common/keys/bootgen-release-ppk.pem "$1/ppk.pem"
-  cp -- board/tsat/3500/common/keys/bootgen-release-spk.pem "$1/spk.pem"
+  cp -- ../keys/bootgen-release-ppk.pem "$1/ppk.pem"
+  cp -- ../keys/bootgen-release-spk.pem "$1/spk.pem"
   cp -- ../keys/efuse.nky.enc "$1"
   cp -- ../keys/appfs.key.enc "$1"
   cd -- "$1"
