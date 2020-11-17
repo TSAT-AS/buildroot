@@ -25,13 +25,11 @@
 ::sysinit:/bin/mkdir -p /dev/shm
 
 # Mount and configure overlayfs
-::sysinit:/bin/mount -t jffs2 /dev/mtdblock6 /overlay
-::sysinit:/bin/mkdir -p /overlay/etc
-::sysinit:/bin/mkdir -p /overlay/work
+::sysinit:/usr/sbin/ubiattach -p /dev/mtd7
+::sysinit:/bin/mount -t ubifs ubi:overlayfs /overlay
 ::sysinit:/bin/mount -t overlay overlay -o lowerdir=/etc,upperdir=/overlay/etc,workdir=/overlay/work /etc
 
 # Mount remaining entries
-::sysinit:/usr/sbin/ubiattach -p /dev/mtd8
 ::sysinit:/bin/mount -a
 
 # Add link to terminal log directory

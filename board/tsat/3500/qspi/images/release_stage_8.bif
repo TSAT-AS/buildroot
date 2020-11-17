@@ -10,6 +10,6 @@ stage8:
   [offset=0x540000] default_count.bin
   [offset=0x5C0000] kernel-ramdisk-dtb.itb
   [offset=0x11C0000] kernel-ramdisk-dtb.itb
-  [offset=0x1F00000] appfskey_e.bin
-  [offset=0x1F40000] appfs.img
+  [offset=0x1DC0000] appfs.key.bin
+  [offset=0x1E00000] ubi.img
 }

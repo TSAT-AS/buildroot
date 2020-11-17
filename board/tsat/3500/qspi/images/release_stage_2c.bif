@@ -1,5 +1,6 @@
 stage2c:
 {
 	[aeskeyfile] /dev/shm/tmp/efuse.nky
+	[bootloader, encryption=aes] fsbl.elf
 	[encryption=aes] /dev/shm/tmp/appfs.key
 }

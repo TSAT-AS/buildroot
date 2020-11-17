@@ -4,7 +4,7 @@ set -e
 
 # create appfs filesystem
 # UBI/UBIFS input parameters described in http://www.linux-mtd.infradead.org/faq/ubifs.html#L_mkfubifs
-# values found on target by running 'mtdinfo -u /dev/mtd8':
+# values found on target by running 'mtdinfo -u /dev/mtdX':
 # mtd8
 # Name:                           appfs
 # Type:                           nor
@@ -20,15 +20,24 @@ set -e
 # Default UBI LEB size:           262016 bytes, 255.8 KiB
 # Maximum UBI volumes count:      128
 
+UBIFS_KEY="$1/appfskey.bin"
+
+mkdir -p "$1/overlayfs/etc"
+mkdir -p "$1/overlayfs/work"
+OVERLAYFS_INPUT="$1/overlayfs"
+OVERLAYFS_OUTPUT="$1/overlayfs.ubifs"
+test -f "$OVERLAYFS_OUTPUT" && rm "$OVERLAYFS_OUTPUT"
+$HOST_DIR/sbin/mkfs.ubifs --root="$OVERLAYFS_INPUT" --cipher AES-256-XTS --key "$UBIFS_KEY" --min-io-size=1 --leb-size=262016 --max-leb-cnt=25 --output="$OVERLAYFS_OUTPUT"
+
 APPFS_INPUT="$1/appfs"
 APPFS_OUTPUT="$1/appfs.ubifs"
 test -d "$APPFS_INPUT" || exit 1
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
-$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --min-io-size=1 --leb-size=262016 --max-leb-cnt=130 --output="$APPFS_OUTPUT"
+$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --cipher AES-256-XTS --key "$UBIFS_KEY" --min-io-size=1 --leb-size=262016 --max-leb-cnt=106 --output="$APPFS_OUTPUT"
 
-cp -- board/tsat/3500/qspi/images/appfs.cfg "$1"
-UBI_IMAGE_INPUT="$1/appfs.cfg"
-UBI_IMAGE_OUTPUT="$1/appfs.img"
+cp -- board/tsat/3500/qspi/images/ubi.cfg "$1"
+UBI_IMAGE_INPUT="$1/ubi.cfg"
+UBI_IMAGE_OUTPUT="$1/ubi.img"
 test -f "$UBI_IMAGE_INPUT" || exit 1
 test -f "$UBI_IMAGE_OUTPUT" && rm "$UBI_IMAGE_OUTPUT"
 pushd -- "$1"
@@ -88,7 +97,7 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   bootgen -arch zynq -image release_stage_2b.bif -w on -o fpga_e.bin -encrypt efuse
 
   echo "Stage 2c: encrypt APPFS key"
-  bootgen -arch zynq -image release_stage_2c.bif -w on -o appfskey_e.bin -encrypt efuse
+  bootgen -arch zynq -image release_stage_2c.bif -w on -o dummy.bin -encrypt efuse -split bin
 
   echo "Stage 3: generate partition hashes"
   bootgen -arch zynq -image release_stage_3.bif -generate_hashes
