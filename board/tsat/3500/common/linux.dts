@@ -211,7 +211,7 @@
       reg = <0x1E00000 0x40000>;
     };
     partition@1E40000 {
-      label = "app";
+      label = "app-data";
       reg = <0x1E40000 0x21C0000>;
     };
   };

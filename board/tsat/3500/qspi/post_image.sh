@@ -20,20 +20,13 @@ set -e
 # Default UBI LEB size:           262016 bytes, 255.8 KiB
 # Maximum UBI volumes count:      128
 
-UBIFS_KEY="$1/appfskey.bin"
-
-mkdir -p "$1/overlayfs/etc"
-mkdir -p "$1/overlayfs/work"
-OVERLAYFS_INPUT="$1/overlayfs"
-OVERLAYFS_OUTPUT="$1/overlayfs.ubifs"
-test -f "$OVERLAYFS_OUTPUT" && rm "$OVERLAYFS_OUTPUT"
-$HOST_DIR/sbin/mkfs.ubifs --root="$OVERLAYFS_INPUT" --cipher AES-256-XTS --key "$UBIFS_KEY" --min-io-size=1 --leb-size=262016 --max-leb-cnt=25 --output="$OVERLAYFS_OUTPUT"
+ENC_KEY="$1/appfs.key"
 
 APPFS_INPUT="$1/appfs"
 APPFS_OUTPUT="$1/appfs.ubifs"
 test -d "$APPFS_INPUT" || exit 1
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
-$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --cipher AES-256-XTS --key "$UBIFS_KEY" --min-io-size=1 --leb-size=262016 --max-leb-cnt=106 --output="$APPFS_OUTPUT"
+$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" --cipher AES-256-XTS --key "$ENC_KEY" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT"
 
 cp -- board/tsat/3500/qspi/images/ubi.cfg "$1"
 UBI_IMAGE_INPUT="$1/ubi.cfg"
