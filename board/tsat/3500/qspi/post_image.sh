@@ -3,11 +3,69 @@
 set -e
 
 # create appfs filesystem
+# UBI/UBIFS input parameters described in http://www.linux-mtd.infradead.org/faq/ubifs.html#L_mkfubifs
+# values found on target by running 'mtdinfo -u /dev/mtdX' and 'ubinfo -a':
+# Name:                           appfs
+# Type:                           nor
+# Eraseblock size:                262144 bytes, 256.0 KiB
+# Amount of eraseblocks:          130 (34078720 bytes, 32.5 MiB)
+# Minimum input/output unit size: 1 byte
+# Sub-page size:                  1 byte
+# Character device major/minor:   90:16
+# Bad blocks are allowed:         false
+# Device is writable:             true
+# Default UBI VID header offset:  64
+# Default UBI data offset:        128
+# Default UBI LEB size:           262016 bytes, 255.8 KiB
+# Maximum UBI volumes count:      128
+#
+# UBI version:                    1
+# Count of UBI devices:           1
+# UBI control device major/minor: 10:59
+# Present UBI devices:            ubi0
+#
+# ubi0
+# Volumes count:                           1
+# Logical eraseblock size:                 262016 bytes, 255.8 KiB
+# Total amount of logical eraseblocks:     135 (35372160 bytes, 33.7 MiB)
+# Amount of available logical eraseblocks: 0 (0 bytes)
+# Maximum count of volumes                 128
+# Count of bad physical eraseblocks:       0
+# Count of reserved physical eraseblocks:  0
+# Current maximum erase counter value:     1
+# Minimum input/output unit size:          1 byte
+# Character device major/minor:            245:0
+# Present volumes:                         1
+#
+# Volume ID:   1 (on ubi0)
+# Type:        dynamic
+# Alignment:   1
+# Size:        131 LEBs (34324096 bytes, 32.7 MiB)
+# State:       OK
+# Name:        appfs
+# Character device major/minor: 245:2
+
+# generate appfs image
 APPFS_INPUT="$1/appfs"
-APPFS_OUTPUT="$1/appfs.jffs2"
+APPFS_OUTPUT="$1/appfs.ubifs"
 test -d "$APPFS_INPUT" || exit 1
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
-output/host/sbin/mkfs.jffs2 -v -U -e 256 -l -d "$APPFS_INPUT" -o "$APPFS_OUTPUT"
+if [ "$TSAT_RELEASE" = "1" ]; then
+  CRYPT_OPT=('--cipher')
+  CRYPT_OPT+=('AES-256-XTS')
+  CRYPT_OPT+=('--key')
+  CRYPT_OPT+=("$1/appfs.key")
+fi
+$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" "${CRYPT_OPT[@]}" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT"
+
+cp -- board/tsat/3500/qspi/images/ubi.cfg "$1"
+UBI_IMAGE_INPUT="$1/ubi.cfg"
+UBI_IMAGE_OUTPUT="$1/ubi.img"
+test -f "$UBI_IMAGE_INPUT" || exit 1
+test -f "$UBI_IMAGE_OUTPUT" && rm "$UBI_IMAGE_OUTPUT"
+pushd -- "$1"
+$HOST_DIR/sbin/ubinize --output="$UBI_IMAGE_OUTPUT" --peb-size=256KiB --min-io-size=1 "$UBI_IMAGE_INPUT"
+popd
 
 # build boot script FIT image
 cp -v -- board/tsat/3500/common/images/u-boot-script.its "$1"
@@ -62,7 +120,7 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   bootgen -arch zynq -image release_stage_2b.bif -w on -o fpga_e.bin -encrypt efuse
 
   echo "Stage 2c: encrypt APPFS key"
-  bootgen -arch zynq -image release_stage_2c.bif -w on -o appfskey_e.bin -encrypt efuse
+  bootgen -arch zynq -image release_stage_2c.bif -w on -o dummy.bin -encrypt efuse -split bin
 
   echo "Stage 3: generate partition hashes"
   bootgen -arch zynq -image release_stage_3.bif -generate_hashes

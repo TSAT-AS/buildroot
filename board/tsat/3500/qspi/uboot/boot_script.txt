@@ -46,4 +46,11 @@ else
   sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_b} ${tsat_qspi_kernel_size}
 fi
 
+# decrypt encryption key
+setenv enc_key_addr 0x3000000
+setenv enc_key_size 0x36C
+setenv tsat_qspi_key_offset 0x1E00000
+sf read ${enc_key_addr} ${tsat_qspi_key_offset} ${enc_key_size}
+zynq aes ${enc_key_addr} ${enc_key_size} 0xffff0000 0x40
+
 bootm ${tsat_kernel_loadaddr}

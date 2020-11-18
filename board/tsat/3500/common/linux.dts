@@ -207,16 +207,12 @@
       reg = <0x1200000 0xC00000>;
     };
     partition@1E00000 {
-      label = "rootfs-data";
-      reg = <0x1E00000 0x140000>;
+      label = "meta-data";
+      reg = <0x1E00000 0x40000>;
     };
-    partition@1F40000 {
-      label = "appfs-data";
-      reg = <0x1F40000 0x40000>;
-    };
-    partition@1F80000 {
-      label = "appfs";
-      reg = <0x1F80000 0x2080000>;
+    partition@1E40000 {
+      label = "app-data";
+      reg = <0x1E40000 0x21C0000>;
     };
   };
 };
