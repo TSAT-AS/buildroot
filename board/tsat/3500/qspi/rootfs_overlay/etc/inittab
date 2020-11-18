@@ -24,6 +24,9 @@
 ::sysinit:/bin/mkdir -p /dev/pts
 ::sysinit:/bin/mkdir -p /dev/shm
 
+# Insert encryption keys
+::sysinit:/usr/local/bin/load_keys.sh
+
 # Mount and configure overlayfs
 ::sysinit:/usr/sbin/ubiattach -p /dev/mtd7
 ::sysinit:/bin/mount -t ubifs ubi:overlayfs /overlay
