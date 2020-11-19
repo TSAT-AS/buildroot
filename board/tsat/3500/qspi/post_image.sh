@@ -45,6 +45,17 @@ set -e
 # Name:        appfs
 # Character device major/minor: 245:2
 
+if [ "$TSAT_RELEASE" = "1" ]; then
+  TMP_DIR=$(mktemp -d -p /dev/shm)
+  LINK_NAME="/dev/shm/tmp"
+  ln -snf "$TMP_DIR" "$LINK_NAME"
+  cp -- ../keys/efuse.nky.enc "$1"
+  cp -- ../keys/appfs.key.enc "$1"
+  gpg --decrypt --armor --output "$TMP_DIR/efuse.nky" "$1/efuse.nky.enc"
+  gpg --decrypt --armor --output "$TMP_DIR/appfs.key" "$1/appfs.key.enc"
+  gpg-connect-agent 'scd killscd' /bye # force GPG to release Yubikey and let PIV be used
+fi
+
 # generate appfs image
 APPFS_INPUT="$1/appfs"
 APPFS_OUTPUT="$1/appfs.ubifs"
@@ -54,7 +65,7 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   CRYPT_OPT=('--cipher')
   CRYPT_OPT+=('AES-256-XTS')
   CRYPT_OPT+=('--key')
-  CRYPT_OPT+=("$1/appfs.key")
+  CRYPT_OPT+=("$TMP_DIR/appfs.key")
 fi
 $HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" "${CRYPT_OPT[@]}" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT"
 
@@ -91,16 +102,7 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   cp -- board/tsat/3500/qspi/images/release_* "$1"
   cp -- ../keys/bootgen-release-ppk.pem "$1/ppk.pem"
   cp -- ../keys/bootgen-release-spk.pem "$1/spk.pem"
-  cp -- ../keys/efuse.nky.enc "$1"
-  cp -- ../keys/appfs.key.enc "$1"
   cd -- "$1"
-
-  TMP_DIR=$(mktemp -d -p /dev/shm)
-  LINK_NAME="/dev/shm/tmp"
-  ln -snf "$TMP_DIR" "$LINK_NAME"
-  gpg --decrypt --armor --output "$TMP_DIR/efuse.nky" efuse.nky.enc
-  gpg --decrypt --armor --output "$TMP_DIR/appfs.key" appfs.key.enc
-  gpg-connect-agent 'scd killscd' /bye # force GPG to release Yubikey and let PIV be used
 
   echo "Stage 0: generate SPK hash"
   bootgen -image release_stage_0.bif -arch zynq -w on -generate_hashes
