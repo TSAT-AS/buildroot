@@ -60,7 +60,7 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 ttyPS0::respawn:/usr/local/bin/load_terminal.sh
 
 # Put a getty on the serial port
-ttyPS0::respawn:/sbin/getty -L  ttyPS0 0 vt100 # GENERIC_SERIAL
+#ttyPS0::respawn:/sbin/getty -L  ttyPS0 0 vt100 # GENERIC_SERIAL
 
 # Stuff to do for the 3-finger salute
 #::ctrlaltdel:/sbin/reboot
