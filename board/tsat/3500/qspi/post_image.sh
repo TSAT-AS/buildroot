@@ -67,7 +67,7 @@ if [ "$TSAT_RELEASE" = "1" ]; then
   CRYPT_OPT+=('--key')
   CRYPT_OPT+=("$TMP_DIR/appfs.key")
 fi
-$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" "${CRYPT_OPT[@]}" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT"
+$HOST_DIR/sbin/mkfs.ubifs --root="$APPFS_INPUT" "${CRYPT_OPT[@]}" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT" --squash-uids
 
 cp -- board/tsat/3500/qspi/images/ubi.cfg "$1"
 UBI_IMAGE_INPUT="$1/ubi.cfg"
