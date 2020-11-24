@@ -10,9 +10,9 @@ BR2_TARGET_GENERIC_ISSUE="Welcome to TSAT3500"
 BR2_TARGET_GENERIC_ROOT_PASSWD="123"
 BR2_TARGET_GENERIC_GETTY_PORT="ttyPS0"
 # BR2_TARGET_GENERIC_REMOUNT_ROOTFS_RW is not set
-BR2_ROOTFS_OVERLAY="board/tsat/3500/common/rootfs_overlay board/tsat/3500/qspi/rootfs_overlay"
+BR2_ROOTFS_OVERLAY="board/tsat/3500/common/rootfs_overlay"
 BR2_ROOTFS_POST_BUILD_SCRIPT="board/tsat/3500/common/post_build.sh"
-BR2_ROOTFS_POST_IMAGE_SCRIPT="board/tsat/3500/common/post_image.sh board/tsat/3500/qspi/post_image.sh"
+BR2_ROOTFS_POST_IMAGE_SCRIPT="board/tsat/3500/common/post_image.sh"
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_GIT=y
 BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/enclustra-bsp/xilinx-linux.git"
@@ -71,7 +71,7 @@ BR2_TARGET_UBOOT_CUSTOM_GIT=y
 BR2_TARGET_UBOOT_CUSTOM_REPO_URL="https://github.com/TSAT-AS/u-boot-xlnx.git"
 BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="93c3d94b09ebaf7c696e1a40acacde310d4f15c9"
 BR2_TARGET_UBOOT_USE_CUSTOM_CONFIG=y
-BR2_TARGET_UBOOT_CUSTOM_CONFIG_FILE="board/tsat/3500/qspi/uboot.config"
+BR2_TARGET_UBOOT_CUSTOM_CONFIG_FILE="board/tsat/3500/common/uboot.config"
 BR2_TARGET_UBOOT_NEEDS_DTC=y
 # BR2_TARGET_UBOOT_FORMAT_BIN is not set
 BR2_TARGET_UBOOT_FORMAT_CUSTOM=y
