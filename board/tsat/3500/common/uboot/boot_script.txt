@@ -8,16 +8,16 @@ setexpr boot_selector_a_value 0xaa
 setexpr boot_selector_b_value ${boot_selector_a_value} ^ 0xff
 
 # read boot selector and counter
-setenv boot_selector_addr 0x2000000
-setenv boot_counter_addr 0x2000001
+setenv boot_selector_loadaddr 0x5000000
+setenv boot_counter_loadaddr 0x5000001
 setenv boot_selector_offset 0x540000
 setenv boot_counter_offset 0x580000
-sf read ${boot_selector_addr} ${boot_selector_offset} 1
-sf read ${boot_counter_addr} ${boot_counter_offset} 1
+sf read ${boot_selector_loadaddr} ${boot_selector_offset} 1
+sf read ${boot_counter_loadaddr} ${boot_counter_offset} 1
 
 setexpr boot_counter_limit 5
-setexpr.b boot_selector *${boot_selector_addr}
-setexpr.b boot_counter *${boot_counter_addr}
+setexpr.b boot_selector *${boot_selector_loadaddr}
+setexpr.b boot_counter *${boot_counter_loadaddr}
 
 if itest.b ${boot_counter} -lt ${boot_counter_limit}; then
   echo "boot count: ${boot_counter}"
@@ -28,29 +28,37 @@ else
 
   # flip boot selector
   setexpr boot_selector ${boot_selector} ^ 0xff
-  mw.b ${boot_selector_addr} ${boot_selector} 1
-  sf update ${boot_selector_addr} ${boot_selector_offset} 1
+  mw.b ${boot_selector_loadaddr} ${boot_selector} 1
+  sf update ${boot_selector_loadaddr} ${boot_selector_offset} 1
 fi
 
 # write boot counter
-mw.b ${boot_counter_addr} ${boot_counter} 1
-sf update ${boot_counter_addr} ${boot_counter_offset} 1
+mw.b ${boot_counter_loadaddr} ${boot_counter} 1
+sf update ${boot_counter_loadaddr} ${boot_counter_offset} 1
+
+# load system FIT
+setenv def_args console=ttyPS0,115200 ro earlyprintk
+setenv fit_image_loadaddr 0x6000000
+setenv fit_image_offset_a 0x0600000
+setenv fit_image_offset_b 0x1200000
+setenv fit_image_size 0xC00000
 
 if itest.b ${boot_selector} -eq ${boot_selector_a_value}; then
   echo "BOOT SELECTOR ${boot_selector} => BOOT A"
-  setenv bootargs ${tsat_def_args} rootwait copy=A
-  sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_a} ${tsat_qspi_kernel_size}
+  setenv bootargs ${def_args} rootwait copy=A
+  sf read ${fit_image_loadaddr} ${fit_image_offset_a} ${fit_image_size}
 else
   echo "BOOT SELECTOR ${boot_selector} => BOOT B"
-  setenv bootargs ${tsat_def_args} rootwait copy=B
-  sf read ${tsat_kernel_loadaddr} ${tsat_qspi_kernel_offset_b} ${tsat_qspi_kernel_size}
+  setenv bootargs ${def_args} rootwait copy=B
+  sf read ${fit_image_loadaddr} ${fit_image_offset_b} ${fit_image_size}
 fi
 
 # decrypt encryption key
-setenv enc_key_addr 0x3000000
+setenv enc_key_loadaddr 0x7000000
 setenv enc_key_size 0x36C
 setenv tsat_qspi_key_offset 0x1E00000
-sf read ${enc_key_addr} ${tsat_qspi_key_offset} ${enc_key_size}
-zynq aes ${enc_key_addr} ${enc_key_size} 0xffff0000 0x40
+sf read ${enc_key_loadaddr} ${tsat_qspi_key_offset} ${enc_key_size}
+zynq aes ${enc_key_loadaddr} ${enc_key_size} 0xffff0000 0x40
 
-bootm ${tsat_kernel_loadaddr}
+# boot
+bootm ${fit_image_loadaddr}
