@@ -137,7 +137,6 @@ echo -en "\x00" > "$1/default_count.bin"
 # release => secure boot image: encrypted and signed partitions
 # debug => non-secure boot
 FULL_IMG='qspi.img'
-FULL_IMG_PADDED='qspi_padded.img'
 
 if [ "$TSAT_RELEASE" = "1" ]; then
   PRI_KEY_ID='pkcs11:id=%13;type=private'
@@ -223,14 +222,6 @@ else
   cd -- "$1"
   bootgen -image "$BIF" -arch zynq -o "$FULL_IMG" -w on -log info
 fi
-
-# pad file to fill the complete flash and make flashing simpler
-echo "Generating padded QSPI bootable image: $FULL_IMG_PADDED"
-dd if=/dev/zero count=512 | tr "\000" "\377" > ff_file_front
-dd if=/dev/zero ibs=1024 count=65536 | tr "\000" "\377" > ff_file_back
-cat ff_file_front "$FULL_IMG" ff_file_back > "$FULL_IMG_PADDED"
-rm ff_file_front ff_file_back
-truncate --size=64M "$FULL_IMG_PADDED"
 
 # generate qspi swu packages
 if [ "$TSAT_RELEASE" = "1" ]; then
