@@ -59,12 +59,6 @@ null::sysinit:/bin/ln -sf /proc/self/fd/2 /dev/stderr
 # start the satellite terminal software
 ttyPS0::respawn:/usr/local/bin/load_terminal.sh
 
-# Put a getty on the serial port
-#ttyPS0::respawn:/sbin/getty -L  ttyPS0 0 vt100 # GENERIC_SERIAL
-
-# Stuff to do for the 3-finger salute
-#::ctrlaltdel:/sbin/reboot
-
 # Stuff to do before rebooting
 ::shutdown:/bin/echo 0 > /sys/class/leds/board:green:buc/brightness
 ::shutdown:/bin/echo 0 > /sys/class/leds/board:green:cpu/brightness
