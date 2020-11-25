@@ -10,10 +10,13 @@ if [ "$BUILD_TYPE" = "PROD" ]; then
   cp -- "$SWU_KEY_SRC_DIR/$SWU_KEY_SRC_NAME" "$SWU_KEY_DST_DIR/$SWU_KEY_DST_NAME"
 fi
 
+# set version build info
 VERSION_FILE="$TARGET_DIR/etc/sw-versions"
 BSP_GIT_DESCRIBE="$(cd $BASE_DIR/../.. && git describe --tags --long | sed 's/-[0-9]*-g/-/')"
 if [ -z $BSP_GIT_DESCRIBE ]; then
-  BSP_GIT_DESCRIBE='UNKNOWN'
+  echo "ERROR: could not determine release version"
+  echo "Buildroot must be a child of bsp-collection"
+  exit 1
 fi
 BUILDROOT_GIT_DESCRIBE="$(git describe --tags --long | sed 's/-[0-9]*-g/-/')"
 
