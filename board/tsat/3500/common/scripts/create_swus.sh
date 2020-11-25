@@ -2,7 +2,7 @@
 set -e
 
 if [ "$TSAT_SECURE" = "1" ]; then
-  SIGN_OPT=('--release')
+  SIGN_OPT=('--sign')
 fi
 
 MKSWU="$HOST_DIR/bin/mkswu.py"
