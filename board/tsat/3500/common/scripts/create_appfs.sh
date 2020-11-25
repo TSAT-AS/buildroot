@@ -64,7 +64,7 @@ ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
 # generate ubifs image
 APPFS_OUTPUT="$1/appfs.ubifs"
 test -f "$APPFS_OUTPUT" && rm "$APPFS_OUTPUT"
-if [ "$TSAT_RELEASE" = "1" ]; then
+if [ "$TSAT_SECURE" = "1" ]; then
   CRYPT_OPT=('--cipher')
   CRYPT_OPT+=('AES-256-XTS')
   CRYPT_OPT+=('--key')

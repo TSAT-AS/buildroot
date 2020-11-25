@@ -4,7 +4,7 @@ SWU_KEY_SRC_DIR='../keys'
 SWU_KEY_DST_DIR="$TARGET_DIR/usr/local/share"
 SWU_KEY_DST_NAME='public.pem'
 
-if [ "$TSAT_RELEASE" = "1" ]; then
+if [ "$TSAT_SECURE" = "1" ]; then
   SWU_KEY_SRC_NAME='swu-release-pub.pem'
 else
   SWU_KEY_SRC_NAME='swu-debug-pub.pem'

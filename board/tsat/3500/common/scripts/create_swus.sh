@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$TSAT_RELEASE" = "1" ]; then
+if [ "$TSAT_SECURE" = "1" ]; then
   SIGN_OPT=('--release')
 fi
 

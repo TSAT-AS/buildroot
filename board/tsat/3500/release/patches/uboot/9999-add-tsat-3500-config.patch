@@ -34,7 +34,7 @@ index 0000000..8b221db
 +#undef CONFIG_BOOTCOMMAND
 +#endif
 +
-+#ifdef TSAT_RELEASE
++#ifdef TSAT_SECURE
 +#define CONFIG_BOOTCOMMAND        "zx_set_storage QSPI && sf probe && run rsa_verify && run qspiboot"
 +#else
 +#define CONFIG_BOOTCOMMAND        "zx_set_storage QSPI && sf probe && run qspiboot"
