@@ -15,7 +15,7 @@ cd -- "$1"
 
 $MKMAGE -f "$FIT_SRC" 'kernel-ramdisk-dtb.itb'
 
-# sign release builds
+# sign image
 if [ "$TSAT_SECURE" = "1" ]; then
   echo "sign system FIT..."
   $MKMAGE -F 'kernel-ramdisk-dtb.itb' -k 'id=%15' -N pkcs11 -K 'u-boot.dtb' -c "Signed by build system" -r
