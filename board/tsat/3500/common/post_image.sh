@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+# define build type as defined in defconfig
+export BUILD_TYPE="$2"
+
 # create work area
 TMP_DIR=$(mktemp -d -p /dev/shm)
 LINK_NAME="/dev/shm/tmp"

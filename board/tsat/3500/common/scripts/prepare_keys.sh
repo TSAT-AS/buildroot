@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$TSAT_SECURE" = "1" ]; then
+if [ "$BUILD_TYPE" = "PROD" ]; then
   cp -- ../keys/efuse.nky.enc "$1"
   cp -- ../keys/appfs.key.enc "$1"
   gpg --decrypt --armor --output "$TMP_DIR/efuse.nky" "$1/efuse.nky.enc"

@@ -7,7 +7,7 @@ FULL_IMG='qspi.img'
 BOOTGEN="$HOST_DIR/bin/bootgen"
 OPENSSL="$HOST_DIR/bin/openssl"
 
-if [ "$TSAT_SECURE" = "1" ]; then
+if [ "$BUILD_TYPE" = "PROD" ]; then
   PRI_KEY_ID='pkcs11:id=%13;type=private'
   SEC_KEY_ID='pkcs11:id=%14;type=private'
 

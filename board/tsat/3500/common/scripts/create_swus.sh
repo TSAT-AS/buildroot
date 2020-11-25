@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$TSAT_SECURE" = "1" ]; then
+if [ "$BUILD_TYPE" = "PROD" ]; then
   SIGN_OPT=('--sign')
 fi
 

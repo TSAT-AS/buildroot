@@ -13,6 +13,7 @@ BR2_TARGET_GENERIC_ISSUE="Welcome to TSAT3500"
 BR2_ROOTFS_OVERLAY="board/tsat/3500/common/rootfs_overlay"
 BR2_ROOTFS_POST_BUILD_SCRIPT="board/tsat/3500/common/post_build.sh"
 BR2_ROOTFS_POST_IMAGE_SCRIPT="board/tsat/3500/common/post_image.sh"
+BR2_ROOTFS_POST_SCRIPT_ARGS="PROD"
 BR2_LINUX_KERNEL=y
 BR2_LINUX_KERNEL_CUSTOM_GIT=y
 BR2_LINUX_KERNEL_CUSTOM_REPO_URL="https://github.com/enclustra-bsp/xilinx-linux.git"

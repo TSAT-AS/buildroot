@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..8b221db
 --- /dev/null
 +++ b/include/configs/tsat_3500.h
-@@ -0,0 +1,57 @@
+@@ -0,0 +1,52 @@
 +/*
 + * (C) Copyright 2013 Xilinx, Inc.
 + * (C) Copyright 2015 Antmicro Ltd
@@ -33,12 +33,7 @@ index 0000000..8b221db
 +#ifdef CONFIG_BOOTCOMMAND
 +#undef CONFIG_BOOTCOMMAND
 +#endif
-+
-+#ifdef TSAT_SECURE
-+#define CONFIG_BOOTCOMMAND        "zx_set_storage QSPI && sf probe && run rsa_verify && run qspiboot"
-+#else
 +#define CONFIG_BOOTCOMMAND        "zx_set_storage QSPI && sf probe && run qspiboot"
-+#endif
 +
 +#ifdef CONFIG_EXTRA_ENV_SETTINGS
 +#undef CONFIG_EXTRA_ENV_SETTINGS
