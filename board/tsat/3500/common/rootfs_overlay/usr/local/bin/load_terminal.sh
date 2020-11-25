@@ -23,7 +23,7 @@ fi
 # give up if term crashes repeatedly
 if [ -f "$REMAINING_TRIES_FILE" ]; then
   REMAINING_TRIES=($(<"$REMAINING_TRIES_FILE"))
-  # all 3 treis used
+  # all three tries used
   if [ "$REMAINING_TRIES" -le 0 ]; then
     echo "term crashed three times, giving up..."
     sleep 30
