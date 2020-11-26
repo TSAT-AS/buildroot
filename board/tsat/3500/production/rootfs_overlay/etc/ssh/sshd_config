@@ -28,7 +28,7 @@ HostKeyAlgorithms ssh-ed25519
 # Authentication:
 
 #LoginGraceTime 2m
-PermitRootLogin no
+#PermitRootLogin prohibit-password
 #StrictModes yes
 #MaxAuthTries 6
 #MaxSessions 10
