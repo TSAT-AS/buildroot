@@ -1,4 +1,8 @@
 #!/bin/sh
+set -e
+
+# define build type as defined in defconfig
+export BUILD_TYPE="$2"
 
 # add swupdate public key
 if [ "$BUILD_TYPE" = "PROD" ]; then
