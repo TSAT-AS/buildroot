@@ -10,7 +10,7 @@ BR2_TARGET_GENERIC_ISSUE="Welcome to TSAT3500"
 # BR2_TARGET_ENABLE_ROOT_LOGIN is not set
 # BR2_TARGET_GENERIC_GETTY is not set
 # BR2_TARGET_GENERIC_REMOUNT_ROOTFS_RW is not set
-BR2_ROOTFS_OVERLAY="board/tsat/3500/common/rootfs_overlay"
+BR2_ROOTFS_OVERLAY="board/tsat/3500/common/rootfs_overlay board/tsat/3500/production/rootfs_overlay"
 BR2_ROOTFS_POST_BUILD_SCRIPT="board/tsat/3500/common/post_build.sh"
 BR2_ROOTFS_POST_IMAGE_SCRIPT="board/tsat/3500/common/post_image.sh"
 BR2_ROOTFS_POST_SCRIPT_ARGS="PROD"
