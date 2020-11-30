@@ -3,7 +3,7 @@ new file mode 100644
 index 0000000..8b221db
 --- /dev/null
 +++ b/include/configs/tsat_3500.h
-@@ -0,0 +1,47 @@
+@@ -0,0 +1,49 @@
 +/*
 + * (C) Copyright 2013 Xilinx, Inc.
 + * (C) Copyright 2015 Antmicro Ltd
@@ -44,6 +44,8 @@ index 0000000..8b221db
 +    "fdt_high=0x20000000\0"                     \
 +    "initrd_high=0x20000000\0"                  \
 +    "env_size=" ENVIRONMENT_SIZE "\0"           \
++                                                \
++    "build_type=DEV\0"                          \
 +                                                \
 +    "boot_script_loadaddr=0x4000000\0"          \
 +    "boot_script_offset=0x0500000\0"            \

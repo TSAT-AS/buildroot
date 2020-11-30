@@ -37,7 +37,7 @@ mw.b ${boot_counter_loadaddr} ${boot_counter} 1
 sf update ${boot_counter_loadaddr} ${boot_counter_offset} 1
 
 # load system FIT
-setenv def_args console=ttyPS0,115200 ro earlyprintk
+setenv def_args console=ttyPS0,115200 ro earlyprintk rootwait release=${build_type}
 setenv fit_image_loadaddr 0x6000000
 setenv fit_image_offset_a 0x0600000
 setenv fit_image_offset_b 0x1200000
@@ -45,11 +45,11 @@ setenv fit_image_size 0xC00000
 
 if itest.b ${boot_selector} -eq ${boot_selector_a_value}; then
   echo "BOOT SELECTOR ${boot_selector} => BOOT A"
-  setenv bootargs ${def_args} rootwait copy=A
+  setenv bootargs ${def_args} copy=A
   sf read ${fit_image_loadaddr} ${fit_image_offset_a} ${fit_image_size}
 else
   echo "BOOT SELECTOR ${boot_selector} => BOOT B"
-  setenv bootargs ${def_args} rootwait copy=B
+  setenv bootargs ${def_args} copy=B
   sf read ${fit_image_loadaddr} ${fit_image_offset_b} ${fit_image_size}
 fi
 
