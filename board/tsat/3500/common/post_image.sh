@@ -1,49 +1,27 @@
 #!/usr/bin/env bash
-
 set -e
 
-# normalize U-Boot filename (for bootgen)
-UBOOT="$1/u-boot"
-if [ -f "$UBOOT" ]; then
-  mv -v -- "$UBOOT" "$UBOOT.elf"
-fi
+# define build type as defined in defconfig
+export BUILD_TYPE="$2"
 
-# populate appfs directory
-APPFS_DIR="$1/appfs"
-APPFS_FPGA_DIR="$APPFS_DIR/fpga"
-APPFS_TERM_DIR="$APPFS_DIR/terminal"
-mkdir -p "$APPFS_DIR"
-mkdir -p "$APPFS_FPGA_DIR"
-mkdir -p "$APPFS_TERM_DIR"
-tar -x --no-same-owner -v -f "$1/fpga.tar.gz" -C "$APPFS_FPGA_DIR"
-tar -x --no-same-owner -v -f "$1/terminal.tar.gz" -C "$APPFS_TERM_DIR"
-ln -snf "$(basename "$APPFS_FPGA_DIR")/fpga_viterbi_low.bit" "$APPFS_DIR/fpga.bit"
-ln -snf "$(basename "$APPFS_TERM_DIR")" "$APPFS_DIR/current"
+# create work area
+TMP_DIR=$(mktemp -d -p /dev/shm)
+LINK_NAME="/dev/shm/tmp"
+ln -snf "$TMP_DIR" "$LINK_NAME"
 
-# create FIT image
-echo "create system FIT..."
-if [ "$TSAT_RELEASE" = "1" ]; then
-  FIT_SRC='kernel-ramdisk-dtb-release.its'
-else
-  FIT_SRC='kernel-ramdisk-dtb-debug.its'
-fi
-cp -v -- "board/tsat/3500/common/images/$FIT_SRC" "$1"
-mkimage -f "$1/$FIT_SRC" "$1/kernel-ramdisk-dtb.itb"
-
-# sign FIT image (only in release builds)
-if [ "$TSAT_RELEASE" = "1" ]; then
-  echo "sign system FIT..."
-  mkimage -F "$1/kernel-ramdisk-dtb.itb" -k 'id=%15' -N pkcs11 -K "$1/u-boot.dtb" -c "Signed by build system" -r
-fi
-
-# get files for boot image creation
 cp -- ../binaries/fsbl.elf "$1"
 cp -- ../binaries/fpga.bit "$1"
 
-# create terminal and fpga SWUs
-cd -- "$1"
-if [ "$TSAT_RELEASE" = "1" ]; then
-  SIGN_OPT=('--release')
-fi
-$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" fpga 'fpga.tar.gz'
-$HOST_DIR/bin/mkswu.py "${SIGN_OPT[@]}" terminal 'terminal.tar.gz'
+SCRIPTS='./board/tsat/3500/common/scripts/'
+$SCRIPTS/normalize_filenames.sh "$@"
+$SCRIPTS/create_system_fit.sh "$@"
+$SCRIPTS/create_uboot_script.sh "$@"
+$SCRIPTS/create_default_boot_vars.sh "$@"
+$SCRIPTS/prepare_keys.sh "$@"
+$SCRIPTS/create_appfs.sh "$@"
+$SCRIPTS/create_boot_image.sh "$@"
+$SCRIPTS/create_swus.sh "$@"
+
+# destroy work area
+rm "$LINK_NAME"
+rm -rf "$TMP_DIR"
