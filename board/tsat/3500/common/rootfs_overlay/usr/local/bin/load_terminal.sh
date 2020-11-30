@@ -11,10 +11,29 @@ NEXT_BASE_DIR="$BASE_DIR/next"
 CURRENT_RUN_SCRIPT="$CURRENT_BASE_DIR/$RUN_SCRIPT"
 NEXT_RUN_SCRIPT="$NEXT_BASE_DIR/$RUN_SCRIPT"
 
+MAX_TRIES=3
+REMAINING_TRIES_FILE="/tmp/term_start_tries"
+
 # do nothing if noauto flag is present
 if [ -f "$NOAUTO_FLAG" ]; then
   sleep 30
   exit 0
+fi
+
+# give up if term crashes repeatedly
+if [ -f "$REMAINING_TRIES_FILE" ]; then
+  read REMAINING_TRIES < "$REMAINING_TRIES_FILE"
+  REMAINING_TRIES=$(($REMAINING_TRIES-1))
+  # all three tries used
+  if [ "$REMAINING_TRIES" -le 0 ]; then
+    echo "term crashed three times, giving up..."
+    sleep 30
+    exit 0
+  fi
+  echo $REMAINING_TRIES > $REMAINING_TRIES_FILE
+else
+  echo "Writing remaining tries to '$REMAINING_TRIES_FILE'"
+  echo $MAX_TRIES > $REMAINING_TRIES_FILE
 fi
 
 # start new terminal if "next" symlink exist and it contains a run script
