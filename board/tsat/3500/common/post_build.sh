@@ -18,9 +18,14 @@ fi
 VERSION_FILE="$TARGET_DIR/etc/sw-versions"
 BSP_GIT_DESCRIBE="$(cd $BASE_DIR/../.. && git describe --tags --long | sed 's/-[0-9]*-g/-/')"
 if [ -z $BSP_GIT_DESCRIBE ]; then
-  echo "ERROR: could not determine release version"
-  echo "Buildroot must be a child of bsp-collection"
-  exit 1
+  if [ "$BUILD_TYPE" = "PROD" ]; then
+    echo "ERROR: could not determine release version"
+    echo "Buildroot must be a child of master-bsp-collection"
+    exit 1
+  else
+    echo "Buildroot not a child of master-bsp-collection, use 'develop' as release tag"
+    BSP_GIT_DESCRIBE="develop"
+  fi
 fi
 BUILDROOT_GIT_DESCRIBE="$(git describe --tags --long | sed 's/-[0-9]*-g/-/')"
 
