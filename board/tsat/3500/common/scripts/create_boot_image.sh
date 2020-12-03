@@ -8,10 +8,17 @@ BOOTGEN="$HOST_DIR/bin/bootgen"
 OPENSSL="$HOST_DIR/bin/openssl"
 
 if [ "$BUILD_TYPE" = "PROD" ]; then
+  echo "Creating secure QSPI image: $1/$FULL_IMG"
+
+  # prepare openssl config
+  export OPENSSL_CONF='/tmp/openssl.cnf'
+  cp -- board/tsat/3500/production/openssl.cnf "$OPENSSL_CONF"
+  sed -i "s#= BR_HOST#= $HOST_DIR#g" "$OPENSSL_CONF"
+  sed -i "s#= SC_PIN#= $PIN#g" "$OPENSSL_CONF"
+
+  # set PKCS11 identifiers for signing keys
   PRI_KEY_ID='pkcs11:id=%13;type=private'
   SEC_KEY_ID='pkcs11:id=%14;type=private'
-
-  echo "Creating secure QSPI image: $1/$FULL_IMG"
 
   cp -- ../keys/bootgen-release-ppk.pem "$1/ppk.pem"
   cp -- ../keys/bootgen-release-spk.pem "$1/spk.pem"
@@ -80,6 +87,10 @@ if [ "$BUILD_TYPE" = "PROD" ]; then
 
   echo "Stage 8: generate final bootable image"
   $BOOTGEN -arch zynq -image bootgen_secure_stage_8.bif -w on -o "${FULL_IMG}" -log info
+
+  # clean up
+  rm "$OPENSSL_CONF"
+  unset OPENSSL_CONF
 else
   echo "Creating DEBUG QSPI image: $1/$FULL_IMG"
   BIF='bootgen_non_secure.bif'
