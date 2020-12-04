@@ -1,0 +1,13 @@
+openssl_conf = openssl_init
+
+[ openssl_init ]
+engines = engine_section
+
+[engine_section]
+pkcs11 = pkcs11_section
+
+[pkcs11_section]
+engine_id = pkcs11
+dynamic_path = BR_HOST/lib/engines-1.1/libpkcs11.so
+MODULE_PATH = BR_HOST/lib/libykcs11.so
+PIN = SC_PIN

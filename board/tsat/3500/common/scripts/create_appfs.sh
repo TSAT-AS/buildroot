@@ -68,7 +68,7 @@ if [ "$BUILD_TYPE" = "PROD" ]; then
   CRYPT_OPT=('--cipher')
   CRYPT_OPT+=('AES-256-XTS')
   CRYPT_OPT+=('--key')
-  CRYPT_OPT+=("/dev/shm/tmp/appfs.key")
+  CRYPT_OPT+=("$WORK/appfs.key")
 fi
 $MKFS --root="$APPFS_DIR" "${CRYPT_OPT[@]}" --min-io-size=1 --leb-size=262016 --max-leb-cnt=131 --output="$APPFS_OUTPUT" --squash-uids
 

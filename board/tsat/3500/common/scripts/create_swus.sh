@@ -3,6 +3,9 @@ set -e
 
 if [ "$BUILD_TYPE" = "PROD" ]; then
   SIGN_OPT=('--sign')
+
+  # override openssl config
+  export OPENSSL_CONF="$WORK/openssl.cnf"
 fi
 
 MKSWU="$HOST_DIR/bin/mkswu.py"

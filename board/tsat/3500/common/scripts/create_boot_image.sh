@@ -8,10 +8,14 @@ BOOTGEN="$HOST_DIR/bin/bootgen"
 OPENSSL="$HOST_DIR/bin/openssl"
 
 if [ "$BUILD_TYPE" = "PROD" ]; then
+  echo "Creating secure QSPI image: $1/$FULL_IMG"
+
+  # override openssl config
+  export OPENSSL_CONF="$WORK/openssl.cnf"
+
+  # set PKCS11 identifiers for signing keys
   PRI_KEY_ID='pkcs11:id=%13;type=private'
   SEC_KEY_ID='pkcs11:id=%14;type=private'
-
-  echo "Creating secure QSPI image: $1/$FULL_IMG"
 
   cp -- ../keys/bootgen-release-ppk.pem "$1/ppk.pem"
   cp -- ../keys/bootgen-release-spk.pem "$1/spk.pem"
