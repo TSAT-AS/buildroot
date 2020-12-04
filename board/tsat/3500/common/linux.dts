@@ -16,6 +16,7 @@
     gpio2 = &tca6416_gpio;
     i2c0 = &i2c0;
     i2c1 = &i2c1;
+    pmu@f8891000 = &pmu;
   };
   chosen {
     stdout-path = &uart1;
@@ -168,6 +169,10 @@
       default-state = "off";
     };
   };
+};
+&pmu {
+	interrupt-affinity = <&{/cpus/cpu@0}>,
+                       <&{/cpus/cpu@1}>;
 };
 &qspi {
   status = "okay";
