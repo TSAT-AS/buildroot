@@ -12,6 +12,7 @@ if [ "$BUILD_TYPE" = "PROD" ]; then
 
   # override openssl config
   export OPENSSL_CONF="$WORK/openssl.cnf"
+  ln -snf -- "$WORK" /dev/shm/tmp
 
   # set PKCS11 identifiers for signing keys
   PRI_KEY_ID='pkcs11:id=%13;type=private'
