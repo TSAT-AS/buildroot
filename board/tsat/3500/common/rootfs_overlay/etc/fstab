@@ -11,4 +11,4 @@ sysfs       /sys        sysfs   defaults,noauto 0 0
 tmpfs       /lib/firmware tmpfs   defaults 0 0
 
 # appfs
-ubi:appfs   /root       ubifs   defaults,noatime 0	0
+ubi:appfs   /root       ubifs   defaults,noatime,sync 0	0
