@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# Start the network....
+#
+
+ALT_CONFIG=/root/network/interfaces
+
+# Debian ifupdown needs the /run/network lock directory
+mkdir -p /run/network
+
+case "$1" in
+  start)
+  if [ -f "$ALT_CONFIG" ]; then
+    printf "Starting network ("$ALT_CONFIG"): "
+    /sbin/ifup -a -i "$ALT_CONFIG"
+  else
+    printf "Starting network: "
+    [ $? = 0 ]
+    /sbin/ifup -a
+  fi
+  [ $? = 0 ] && echo "OK" || echo "FAIL"
+  ;;
+  stop)
+	printf "Stopping network: "
+	/sbin/ifdown -a
+	[ $? = 0 ] && echo "OK" || echo "FAIL"
+	;;
+  restart|reload)
+	"$0" stop
+	"$0" start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
