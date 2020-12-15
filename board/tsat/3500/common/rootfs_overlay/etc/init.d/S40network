@@ -15,7 +15,6 @@ case "$1" in
     /sbin/ifup -a -i "$ALT_CONFIG"
   else
     printf "Starting network: "
-    [ $? = 0 ]
     /sbin/ifup -a
   fi
   [ $? = 0 ] && echo "OK" || echo "FAIL"
