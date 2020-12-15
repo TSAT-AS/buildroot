@@ -3,3 +3,15 @@ config BR2_PACKAGE_HOST_LIBYKCS11
 	default y
 	help
 	  Host library needed to interface openssl PKCS11 engine with Yubikey smart card emulator
+
+if BR2_PACKAGE_HOST_LIBYKCS11
+
+config BR2_PACKAGE_HOST_LIBYKCS11_PCSCLITE_PKG_PATH
+	string "Path to pkcs-lite pkg-config file"
+	default "/usr/lib/x86_64-linux-gnu/pkgconfig"
+	help
+	  libykcs11 is linked with the host system's native libpcsclite
+	  to be compatible with the native pcscd. The pkg-config (.pc)
+	  file is provided by the package libpcsclite-dev.
+
+endif
