@@ -1,4 +1,0 @@
-release @PLACEHOLDER_RELEASE_VERSION@
-system @PLACEHOLDER_SYSTEM_VERSION@
-terminal -
-fpga -
