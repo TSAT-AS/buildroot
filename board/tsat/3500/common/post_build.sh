@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 # define build type as defined in defconfig
 export BUILD_TYPE="$2"
