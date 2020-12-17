@@ -21,8 +21,8 @@ BUILDROOT_GIT_DESCRIBE="$($GIT_DESCRIBE_CMD)"
 BUILDROOT_GIT_DATETIME="$($GIT_DATETIME_CMD)"
 
 BSP_DIR="$BASE_DIR/../.."
-BSP_GIT_DESCRIBE="$(cd "$BSP_DIR" && "$GIT_DESCRIBE_CMD")"
-if [ -z $BSP_GIT_DESCRIBE ]; then
+BSP_GIT_DESCRIBE="$(cd "$BSP_DIR" && $GIT_DESCRIBE_CMD)"
+if [ -z "$BSP_GIT_DESCRIBE" ]; then
   if [ "$BUILD_TYPE" = "PROD" ]; then
     echo "ERROR: could not determine release version"
     echo "Buildroot must be a child of master-bsp-collection"
@@ -38,9 +38,9 @@ TERMINAL_DIR="$BR2_DL_DIR/terminal/git"
 TERMINAL_GIT_DESCRIBE="$(cd "$TERMINAL_DIR" && $GIT_DESCRIBE_CMD)"
 TERMINAL_GIT_DATETIME="$(cd "$TERMINAL_DIR" && $GIT_DATETIME_CMD)"
 
-FPGA_ID="$(grep -o 'FPGA_VER ".*"' $TERMINAL_DIR/CMakeLists.txt | cut -d'"' -f2)"
-FPGA_COMMIT_HASH="$(cd "$TERMINAL_DIR" && git log -1 --pretty=format:%h -- fpga_api/$FPGA_ID)"
-FPGA_GIT_DATETIME="$(cd "$TERMINAL_DIR" && $GIT_DATETIME_CMD -- fpga_api/$FPGA_ID)"
+FPGA_ID="$(grep -o 'FPGA_VER ".*"' "$TERMINAL_DIR/CMakeLists.txt" | cut -d'"' -f2)"
+FPGA_COMMIT_HASH="$(cd "$TERMINAL_DIR" && git log -1 --pretty=format:%h -- "fpga_api/$FPGA_ID")"
+FPGA_GIT_DATETIME="$(cd "$TERMINAL_DIR" && $GIT_DATETIME_CMD -- "fpga_api/$FPGA_ID")"
 
 normalize()
 {
