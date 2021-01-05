@@ -1,5 +1,0 @@
-config BR2_PACKAGE_HOST_MKBOOTIMAGE
-	bool "mkbootimage"
-	default y
-	help
-	  Antmicro's Zynq boot image builder
