@@ -1,0 +1,7 @@
+config BR2_PACKAGE_LIBROHC
+	bool "librohc"
+	default y
+	select BR2_PACKAGE_LIBPCAP
+	select BR2_PACKAGE_CMOCKA
+	help
+	  ROHC library

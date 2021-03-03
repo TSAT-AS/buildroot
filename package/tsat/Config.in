@@ -1,3 +1,4 @@
 source "package/tsat/adrf6755/Config.in"
 source "package/tsat/terminal/Config.in"
 source "package/tsat/tps65233/Config.in"
+source "package/tsat/librohc/Config.in"
