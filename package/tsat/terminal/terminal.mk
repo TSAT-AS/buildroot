@@ -9,7 +9,7 @@ TERMINAL_GIT_SUBMODULES = yes
 TERMINAL_SITE = ssh://git@dev.tsat.net:7999/tsat3k/terminal-converted.git
 TERMINAL_VERSION = 35.2.0-fix-boot-script
 TERMINAL_CONF_OPTS = -DCMAKE_BUILD_TYPE=Release
-TERMINAL_DEPENDENCIES = host-cmake host-bootgen boost nftables libnl libopenssl libgpiod libiio
+TERMINAL_DEPENDENCIES = host-cmake host-bootgen boost nftables libnl libopenssl libgpiod libiio librohc
 
 define TERMINAL_INSTALL_TARGET_CMDS
   $(HOST_DIR)/bin/cmake --build $(@D) --target package
