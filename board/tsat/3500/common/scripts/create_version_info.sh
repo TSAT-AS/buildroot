@@ -2,6 +2,8 @@
 
 set -e
 
+echo "create version info"
+
 BUILD_DATETIME="$(date --iso-8601="seconds")"
 
 # git helpers
@@ -11,7 +13,8 @@ git_commit_hash_short(){ git log -1 --pretty="format:%h" -- "$@"; } # get short 
 git_commit_date(){ git log -1 --pretty="format:%cI" -- "$@"; } # get comitter date in strict ISO 8601 format
 
 # get buildroot info
-git fetch --tags --depth 200 # get more history in case of shallow clone (jenkins currently does this)
+git fetch --deepen 200 # get more history in case of shallow clone (jenkins currently does this)
+git fetch --tags # get all tags in case of shallow clone (jenkins currently does this)
 BUILDROOT_GIT_DESCRIBE="$(git_describe)"
 BUILDROOT_GIT_COMMIT="$(git_commit_hash)"
 BUILDROOT_GIT_DATETIME="$(git_commit_date)"
