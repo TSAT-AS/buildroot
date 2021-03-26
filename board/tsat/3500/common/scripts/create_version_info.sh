@@ -12,12 +12,22 @@ git_commit_hash(){ git log -1 --pretty="format:%H" -- "$@"; } # get full commit 
 git_commit_hash_short(){ git log -1 --pretty="format:%h" -- "$@"; } # get short commit hash
 git_commit_date(){ git log -1 --pretty="format:%cI" -- "$@"; } # get comitter date in strict ISO 8601 format
 
-# get buildroot info
+# get buildroot/system info
 git fetch --deepen 200 # get more history in case of shallow clone (jenkins currently does this)
 git fetch --tags # get all tags in case of shallow clone (jenkins currently does this)
 BUILDROOT_GIT_DESCRIBE="$(git_describe)"
 BUILDROOT_GIT_COMMIT="$(git_commit_hash)"
 BUILDROOT_GIT_DATETIME="$(git_commit_date)"
+
+# create system fit image checksum
+SYSTEM_FIT_IMAGE="$1/kernel-ramdisk-dtb.itb"
+SYSTEM_FIT_IMAGE_PADDED="${SYSTEM_FIT_IMAGE}.padded"
+cp "$SYSTEM_FIT_IMAGE" "$SYSTEM_FIT_IMAGE_PADDED"
+SYSTEM_PARTITION_SIZE='0xC00000'
+SYSTEM_FIT_IMAGE_SIZE="$(stat --printf="%s" $SYSTEM_FIT_IMAGE_PADDED)"
+SYSTEM_PADDING_SIZE="$(($SYSTEM_PARTITION_SIZE - $SYSTEM_FIT_IMAGE_SIZE))"
+dd if=/dev/zero bs=1 count="$SYSTEM_PADDING_SIZE" | tr "\000" "\377" >> "$SYSTEM_FIT_IMAGE_PADDED"
+SYSTEM_FIT_IMAGE_PADDED_SHA256="$(sha256sum $SYSTEM_FIT_IMAGE_PADDED | cut -d' ' -f1)"
 
 # get bsp-collection info
 pushd "$BASE_DIR/../.."
@@ -65,6 +75,8 @@ mkdir -p -- "$VERSION_DIR"
   echo "version        $BUILDROOT_GIT_DESCRIBE"
   echo "commit         $BUILDROOT_GIT_COMMIT"
   echo "commit-date    $BUILDROOT_GIT_DATETIME"
+  echo
+  echo "sha256-partition $SYSTEM_FIT_IMAGE_PADDED_SHA256"
 ) > "$VERSION_DIR/system"
 
 # write terminal version file
