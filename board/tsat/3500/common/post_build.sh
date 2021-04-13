@@ -12,3 +12,9 @@ if [ "$BUILD_TYPE" = "PROD" ]; then
   mkdir -p -- "$SWU_KEY_DST_DIR"
   cp -- "$SWU_KEY_SRC_DIR/$SWU_KEY_SRC_NAME" "$SWU_KEY_DST_DIR/$SWU_KEY_DST_NAME"
 fi
+
+
+# replace /var/log symlink with dir
+LOG_DIR="$TARGET_DIR/var/log"
+rm -rf "$LOG_DIR"
+mkdir -p "$LOG_DIR"
