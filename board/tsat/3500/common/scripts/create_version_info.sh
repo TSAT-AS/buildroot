@@ -31,7 +31,7 @@ SYSTEM_FIT_IMAGE_PADDED_SHA256="$(sha256sum $SYSTEM_FIT_IMAGE_PADDED | cut -d' '
 
 # get bsp-collection info
 pushd "$BASE_DIR/../.."
-git_describe_bsp_special()
+git_describe_special()
 {
   local LAST_MASTER_RELEASE_TAG="$(git describe --tags --abbrev=0 origin/master)"
   local LAST_COMMON_ANCESTOR="$(git merge-base $LAST_MASTER_RELEASE_TAG HEAD)"
@@ -39,14 +39,14 @@ git_describe_bsp_special()
   local LATEST_COMMIT_HASH="$(git_commit_hash_short)"
   echo "$LAST_MASTER_RELEASE_TAG-$COMMITTS_SINCE_RELEACE_TAG-g$LATEST_COMMIT_HASH"
 }
-BSP_GIT_DESCRIBE="$(git_describe_bsp_special)"
+BSP_GIT_DESCRIBE="$(git_describe_special)"
 BSP_GIT_COMMIT="$(git_commit_hash)"
 BSP_GIT_DATETIME="$(git_commit_date)"
 popd
 
 # get terminal- and FPGA info
 pushd "$BR2_DL_DIR/terminal/git"
-TERMINAL_GIT_DESCRIBE="$(git_describe)"
+TERMINAL_GIT_DESCRIBE="$(git_describe_special)"
 TERMINAL_GIT_COMMIT="$(git_commit_hash)"
 TERMINAL_GIT_DATETIME="$(git_commit_date)"
 FPGA_ID="$(grep -o 'FPGA_VER ".*"' CMakeLists.txt | cut -d'"' -f2)"
