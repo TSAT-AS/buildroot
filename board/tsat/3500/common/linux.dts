@@ -20,7 +20,7 @@
   chosen {
     stdout-path = &uart1;
   };
-  amba: amba {
+  axi: axi {
     uart2: serial@43c10000 {
       clock-frequency = <100000000>;
       clock-names = "s_axi_aclk";
