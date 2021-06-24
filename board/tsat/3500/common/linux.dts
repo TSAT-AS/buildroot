@@ -20,7 +20,7 @@
   chosen {
     stdout-path = &uart1;
   };
-  axi: axi {
+  amba: amba {
     uart2: serial@43c10000 {
       clock-frequency = <100000000>;
       clock-names = "s_axi_aclk";
@@ -48,28 +48,6 @@
   memory@0 {
     device_type = "memory";
     reg = <0x0 0x20000000>;
-  };
-  mdio@e000b000 {
-    compatible = "cdns,macb-mdio";
-    reg = <0xe000b000 0x1000>;
-    clocks = <&clkc 30>, <&clkc 30>, <&clkc 13>;
-    clock-names = "pclk", "hclk", "tx_clk";
-    #address-cells = <1>;
-    #size-cells = <0>;
-    phy3: ethernet-phy@3 {
-      reg = <3>;
-    };
-  };
-  mdio1@e000c000 {
-    compatible = "cdns,macb-mdio";
-    reg = <0xe000c000 0x1000>;
-    clocks = <&clkc 31>, <&clkc 31>;
-    clock-names = "pclk", "hclk";
-    #address-cells = <1>;
-    #size-cells = <0>;
-    phy7: ethernet-phy@7 {
-      reg = <7>;
-    };
   };
   fpga_reg_fft@44000000 {
     compatible = "generic-uio";
@@ -176,7 +154,7 @@
   flash@0 {
     compatible = "s25fl512s";
     reg = <0x0>;
-    spi-tx-bus-width = <1>;
+    spi-tx-bus-width = <4>;
     spi-rx-bus-width = <4>;
     spi-max-frequency = <50000000>;
     #address-cells = <1>;
@@ -220,12 +198,18 @@
   status = "okay";
   phy-mode = "rgmii-id";
   phy-handle = <&phy3>;
+  phy3: ethernet-phy@3 {
+    reg = <3>;
+  };
 };
 &gem1 {
   status = "okay";
   phy-mode = "mii-id";
   phy-handle = <&phy7>;
-  xlnx,emio = <1>;
+  phy7: ethernet-phy@7 {
+    reg = <7>;
+    max-speed = <100>;
+  };
 };
 &sdhci0 {
   status = "okay";
@@ -243,7 +227,7 @@
 };
 &i2c0 {
   status = "okay";
-  isl12022: isl12022@68 {
+  isl12022: isl12022@6f {
     status = "okay";
     compatible = "isil,isl12022";
     reg = <0x6f>;
